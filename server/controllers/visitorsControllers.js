@@ -1,15 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
 const os = require("os");
-const mongoose = require("mongoose");
-const device = require("express-device"); // to get device type
 const platform = require("platform"); // library to get mobile name
 const satelize = require("satelize"); // to get visitor country and continent
-const data = require("./data/data.json");
-const app = express();
-
-const visitors = require("./models/visitorModel");
+const visitors = require("../models/visitorModel");
 
 function getDate() {
   let newDate = new Date();
@@ -35,33 +27,18 @@ function getTime() {
   return `${hours}:${minutes}:${seconds} ${AmPm}`;
 }
 
-let userCountry = "";
-let userContinent = "";
-let userIp = "";
+let userCountry = "unknown";
+let userContinent = "unknown";
+let userIp = "unknown";
 
-require("dotenv").config();
-const DatabaseLink = process.env.DatabaseLink;
-mongoose.connect(DatabaseLink, () => console.log("Database Connected..."));
-
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config({ path: __dirname + "/.env" });
-}
-
-const PORT = process.env.PORT || 443;
-
-app.use(device.capture());
-app.use(express.json());
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-
-app.post("/api/add-ip", (req, res) => {
+exports.addIp = (req, res) => {
   let ip = req.body.ip;
   userIp = ip;
   res.send(userIp);
-});
+};
 
-app.get("/api/add-visitor-data", (req, res) => {
-  if (userIp !== "") {
+exports.addVisitorData = (req, res) => {
+  if (userIp !== "unknown") {
     satelize.satelize({ ip: userIp }, (err, payload) => {
       userCountry = `${payload.country.en}`;
       userContinent = `${payload.continent.en}`;
@@ -73,7 +50,7 @@ app.get("/api/add-visitor-data", (req, res) => {
   let visitorData = {
     username: os.userInfo().username,
     ipAddress: userIp,
-    deviceType: req.device.type,
+    deviceType: "req.device.type",
     mobileName: platform.manufacturer || "Not Mobile",
     userCountry,
     userContinent,
@@ -83,10 +60,8 @@ app.get("/api/add-visitor-data", (req, res) => {
   };
   visitors.findOne({ ipAddress: visitorData.ipAddress }, (err, existingIp) => {
     if (existingIp == null) {
-      console.log("visitor not Exist");
       visitors.create(visitorData);
     } else {
-      console.log("visitor Exist");
       visitors.updateOne(
         { ipAddress: visitorData.ipAddress },
         { $inc: { visitCount: 1 }, $push: { date: date, time: time } },
@@ -95,22 +70,5 @@ app.get("/api/add-visitor-data", (req, res) => {
     }
   });
 
-  res.status(200).send(visitorData);
-});
-
-app.get("/api", (req, res) => {
-  res.send("API Home");
-});
-
-app.get("/api/items", (req, res) => {
-  res.send(data);
-});
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client", "build")));
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client", "build", "index.html"));
-  });
-}
-
-app.listen(PORT, () => console.log(`Server is Running on Port ${PORT}...`));
+  res.status(200).send("Data Successfully Added");
+};

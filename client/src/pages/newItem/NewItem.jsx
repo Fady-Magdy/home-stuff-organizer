@@ -3,14 +3,12 @@ import "./newItem.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchItemsData } from "../../store/slices/newItemSlice";
 import Header from "../../components/header/Header";
-import Api from "../../env";
 const NewItem = () => {
   const newItem = useSelector((state) => state.newItem.itemsData);
   const dispatch = useDispatch();
   const addItem = function () {
     dispatch(fetchItemsData());
   };
-  console.log("Hostname: ", Api);
   return (
     <>
       <Header />
