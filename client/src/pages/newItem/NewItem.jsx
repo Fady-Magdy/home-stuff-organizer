@@ -10,7 +10,7 @@ const NewItem = () => {
   const addItem = function () {
     dispatch(fetchItemsData());
   };
-  console.log(Api);
+  console.log("Hostname: ", Api);
   return (
     <>
       <Header />

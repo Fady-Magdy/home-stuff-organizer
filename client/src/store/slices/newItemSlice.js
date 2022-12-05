@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Api from "../../env";
+const PORT = 443;
 const initialState = {
   itemsData: {
     name: "Unknown",
@@ -12,8 +13,9 @@ const initialState = {
 export const fetchItemsData = createAsyncThunk(
   "itemsData/fetchItemsData",
   async () => {
-    const response = await axios.get(`${Api}:${5000}/api/items`);
-    console.log(response.data);
+    const response = await axios.get(`${Api}:${PORT}/api/items`);
+    console.log("Data: ", response.data);
+    console.log("PORT: ", PORT);
     return response.data;
   }
 );
@@ -26,7 +28,7 @@ export const newItemSlice = createSlice({
     builder.addCase(fetchItemsData.fulfilled, (state, { payload }) => {
       state.itemsData = payload;
       state.status = "success";
-      console.log()
+      console.log();
     });
     builder.addCase(fetchItemsData.pending, (state) => {
       state.status = "pending";

@@ -2,10 +2,6 @@
 
 ---
 
-### First Commit (Basic Setup)
-
----
-
 ### What this app does?
 
 - Helping people to organize their home stuff
@@ -14,7 +10,7 @@
 
 ---
 
-### Technologies Used
+### Packages & Technologies Used
 
 Client Side:
 
@@ -27,8 +23,13 @@ Server Side:
 
 - Node.js
 - Express.js
+- Mongoose
 - Cors
 - Nodemon
+- dotenv
+- express-device
+- platform
+- satelize
 
 ---
 
