@@ -1,0 +1,27 @@
+@import "../../styles/variables.scss";
+
+.header {
+  position: static;
+  background-color: $purple-color;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 50px;
+  .left {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .right {
+    ul {
+      display: flex;
+      gap: 30px;
+      li {
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

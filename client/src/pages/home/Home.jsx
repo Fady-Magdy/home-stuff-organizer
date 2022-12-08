@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import Api from "../../api-link";
 import "./home.scss";
-import Header from "../../components/header/Header";
 import { useState } from "react";
 
 const Home = () => {
-
   const [roomName, setRoomName] = useState("");
   const [containerName, setContainerName] = useState("");
   const [itemName, setItemName] = useState("");
@@ -21,9 +19,7 @@ const Home = () => {
 
   function fetchVisitorData(ip) {
     axios.post(`${Api}/api/add-ip`, { ip: ip }).then((result) => {
-      axios
-        .get(`${Api}/api/add-visitor-data`)
-        .then((result) => console.log(result.data));
+      axios.post(`${Api}/api/add-visitor-data`);
     });
   }
 
@@ -48,52 +44,51 @@ const Home = () => {
         console.log(result.data);
       });
   }
-
+  function testServer() {
+    axios.get(`${Api}/api`).then((result) => console.log(result.data));
+  }
   useEffect(() => {
     fetchVisitorIp();
   }, []);
   return (
-    <>
-      <Header />
-      <div>
-        <h1>Home</h1>
+    <div>
+      <h1>Home</h1>
+      <hr />
+      <h1>Add new Item</h1>
+      <input
+        onChange={(e) => {
+          setRoomName(e.target.value);
+        }}
+        type="text"
+        placeholder="Room Name"
+      />
+      <input
+        onChange={(e) => {
+          setContainerName(e.target.value);
+        }}
+        type="text"
+        placeholder="Container Name"
+      />
+      <input
+        onChange={(e) => {
+          setItemName(e.target.value);
+        }}
+        type="text"
+        placeholder="Item Name"
+      />
+      <button onClick={addNewItem}>Add New Item</button>
+      <hr />
+      <h1>Find your Item</h1>
+      <input
+        onChange={(e) => setSearchValue(e.target.value)}
+        type="search"
+        placeholder="Search Item"
+      />
+      <button onClick={searchItem}>Search Item</button>
 
-        <hr />
-        <h1>Add new Item</h1>
-        <input
-          onChange={(e) => {
-            setRoomName(e.target.value);
-          }}
-          type="text"
-          placeholder="Room Name"
-        />
-        <input
-          onChange={(e) => {
-            setContainerName(e.target.value);
-          }}
-          type="text"
-          placeholder="Container Name"
-        />
-        <input
-          onChange={(e) => {
-            setItemName(e.target.value);
-          }}
-          type="text"
-          placeholder="Item Name"
-        />
-        <button onClick={addNewItem}>Add New Item</button>
-        <hr />
-        <h1>Find your Item</h1>
-        <input
-          onChange={(e) => setSearchValue(e.target.value)}
-          type="search"
-          placeholder="Search Item"
-        />
-        <button onClick={searchItem}>Search Item</button>
-
-        <div></div>
-      </div>
-    </>
+      <div></div>
+      <button onClick={testServer}>Test Server</button>
+    </div>
   );
 };
 

@@ -12,18 +12,25 @@ const {
 
 const PORT = process.env.PORT || 443;
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.use(cors());
 require("dotenv").config();
 app.use(device.capture());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const DatabaseLink = process.env.DatabaseLink;
+mongoose.connect(DatabaseLink, () => console.log("Database Connected..."));
+
 app.use(visitorRoutes);
 app.use(userRoutes);
 app.use(homeItemsRoutes);
 
-const DatabaseLink = process.env.DatabaseLink;
-mongoose.connect(DatabaseLink, () => console.log("Database Connected..."));
+
 
 app.get("/", (req, res) => {
   res.send("Backend Home");

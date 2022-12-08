@@ -3,8 +3,8 @@ import "./header.scss";
 import { Link } from "react-router-dom";
 const Header = () => {
   return (
-    <header>
-      <div className="left">Header</div>
+    <header className="header">
+      <div className="left">Home Stuff Organizer</div>
       <div className="right">
         <ul>
           <li>
@@ -14,7 +14,10 @@ const Header = () => {
             <Link to="/new-item">New Item</Link>
           </li>
           <li>
-            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+          </li>
+          <li>
+            <Link to="/login">login</Link>
           </li>
         </ul>
       </div>

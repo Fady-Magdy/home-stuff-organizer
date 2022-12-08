@@ -6,9 +6,14 @@ exports.addNewItem = (req, res) => {
   User.updateOne(
     { firstName: "Fady" },
     { $push: { homeItems: itemData } },
-    () => {}
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(req.body);
+      }
+    }
   );
-  res.send(req.body);
 };
 
 exports.searchItem = (req, res) => {
