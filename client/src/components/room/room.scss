@@ -1,0 +1,46 @@
+@import "../../styles//variables.scss";
+
+.room {
+  position: relative;
+  padding: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.315);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.178);
+  border-radius: 5px;
+  width: 200px;
+  cursor: pointer;
+  .room-name {
+    font-weight: 600;
+    line-height: 20px;
+  }
+  p {
+    opacity: 0.8;
+    line-height: 20px;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    border: none;
+    border-radius: 0 40px 5px 0;
+    right: 0;
+    top: -2px;
+    width: 0;
+    height: 100%;
+    background-color: $purple-color;
+  }
+  &.active {
+    background-color: $purple-color;
+    &::before {
+      content: "";
+      border: inherit;
+      border-left: none;
+      right: -27px;
+      width: 27px;
+    }
+    .room-name {
+      color: #fff;
+    }
+    p {
+      color: #fff;
+    }
+  }
+}

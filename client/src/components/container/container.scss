@@ -1,0 +1,26 @@
+@import "../../styles//variables.scss";
+
+.container {
+  padding: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.315);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.178);
+  border-radius: 5px;
+  width: 200px;
+  cursor: pointer;
+  .container-name {
+    line-height: 25px;
+  }
+  p {
+    line-height: 25px;
+    opacity: 0.8;
+  }
+  &.active {
+    background-color: $purple-color;
+    .container-name {
+      color: #fff;
+    }
+    p {
+      color: #fff;
+    }
+  }
+}

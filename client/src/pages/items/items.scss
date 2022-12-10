@@ -1,0 +1,18 @@
+.items-page {
+  display: flex;
+  padding-top: 50px;
+  .rooms {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .containers {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-left: 1px solid #000;
+    min-height: calc(100vh - 100px);
+  }
+}

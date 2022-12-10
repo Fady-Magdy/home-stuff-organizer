@@ -3,6 +3,7 @@ import axios from "axios";
 import Api from "../../api-link";
 const initialState = {
   status: "unknown",
+  signedIn: false,
   userData: {},
 };
 
@@ -10,7 +11,7 @@ export const fetchUserData = createAsyncThunk(
   "userData/fetchUserData",
   async () => {
     if (localStorage.getItem("hso-userId")) {
-      const response = await axios.post(`${Api}/api/get-user-data`, {
+      const response = await axios.post(`${Api}/api/users/get-data`, {
         userId: JSON.parse(localStorage.getItem("hso-userId")),
       });
       return response.data;
@@ -23,7 +24,14 @@ export const fetchUserData = createAsyncThunk(
 export const userSlice = createSlice({
   name: "User",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.userData = {};
+    },
+    login: (state) => {
+      state.signedIn = true;
+    },
+  },
 
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
@@ -40,5 +48,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { getUserData } = userSlice.actions;
+export const { getUserData, logout, login } = userSlice.actions;
 export default userSlice.reducer;

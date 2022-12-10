@@ -22,12 +22,20 @@ const UserSchema = new mongoose.Schema({
       roomName: {
         type: String,
       },
-      containerName: {
-        type: String,
-      },
-      itemName: {
-        type: String,
-      },
+      roomContainers: [
+        {
+          containerName: {
+            type: String,
+          },
+          containerItems: [
+            {
+              itemName: {
+                type: String,
+              },
+            },
+          ],
+        },
+      ],
     },
   ],
 });

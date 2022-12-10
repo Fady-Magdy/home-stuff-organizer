@@ -1,25 +1,44 @@
 @import "../../styles/variables.scss";
 
 .header {
-  position: static;
+  position: fixed;
   background-color: $purple-color;
+  width: 100%;
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 50px;
+  box-sizing: border-box;
+  z-index: 4;
   .left {
-    font-size: 20px;
-    color: #fff;
-    font-weight: 600;
+    a {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
   }
   .right {
     ul {
       display: flex;
-      gap: 30px;
       li {
         a {
-          color: #fff;
+          border-radius: 7px;
+          padding: 10px 15px;
+          display: flex;
+          align-items: center;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.192);
+          }
+          svg {
+            margin-right: 5px;
+            path {
+              color: #fff;
+            }
+          }
+          span {
+            color: #fff;
+          }
         }
       }
     }

@@ -2,18 +2,17 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const data = require("./data/data.json");
 const device = require("express-device");
+const PORT = process.env.PORT || 443;
+
 const {
   visitorRoutes,
   userRoutes,
   homeItemsRoutes,
 } = require("./routes/index");
 
-const PORT = process.env.PORT || 443;
-
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Origin", "*");
   next();
 });
 
@@ -24,25 +23,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const DatabaseLink = process.env.DatabaseLink;
-mongoose.connect(DatabaseLink, () => console.log("Database Connected..."));
+mongoose.connect(DatabaseLink, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.connection.once("open", () => console.log("Database connected..."));
 
 app.use(visitorRoutes);
 app.use(userRoutes);
 app.use(homeItemsRoutes);
-
-
-
-app.get("/", (req, res) => {
-  res.send("Backend Home");
-});
-
-app.get("/api", (req, res) => {
-  res.send("API Home");
-});
-
-app.get("/api/items", (req, res) => {
-  res.send(data);
-});
 
 app.listen(PORT, () => console.log(`Server is Running on Port ${PORT}...`));
 

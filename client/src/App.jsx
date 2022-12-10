@@ -1,31 +1,41 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchUserData, login } from "./store/slices/userSlice";
+import "./styles/app.scss";
+
+// Pages
 import Home from "./pages/home/Home";
+import Items from "./pages/items/Items";
 import NewItem from "./pages/newItem/NewItem.jsx";
 import Register from "./pages/register/Register";
-import Header from "./components/header/Header";
-import "./styles/app.scss";
-import NotFound404 from "./pages/notFound404/NotFound404";
 import Login from "./pages/login/Login";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchUserData } from "./store/slices/userSlice";
+import NotFound404 from "./pages/notFound404/NotFound404";
+
+// components
+import Header from "./components/header/Header";
+
 function App() {
-  const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   useEffect(() => {
+    if (localStorage.getItem("hso-userId")) {
+      dispatch(login());
+    }
     dispatch(fetchUserData());
   }, []);
-  console.log(user);
 
   return (
     <div className="App">
       <BrowserRouter basename="/">
         <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/new-item" element={<NewItem />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route index path="/" element={<Home />} />
+          <Route path="items">
+            <Route index path="/items" element={<Items />} />
+            <Route path="new" element={<NewItem />} />
+          </Route>
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </BrowserRouter>

@@ -1,6 +1,7 @@
 @import "../../styles/variables.scss";
 
 .register-page {
+  padding-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,7 +75,6 @@
       width: 100%;
       padding: 15px;
       background-color: $purple-color;
-      color: #fff;
       border: none;
       font-weight: 600;
       font-size: 17px;
@@ -82,6 +82,15 @@
       cursor: pointer;
       &:hover {
         filter: brightness(1.2);
+      }
+      svg {
+        margin-right: 5px;
+        path {
+          color: #fff;
+        }
+      }
+      span {
+        color: #fff;
       }
     }
     .have-account {

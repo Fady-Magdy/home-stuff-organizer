@@ -29,7 +29,7 @@ exports.loginUser = (req, res) => {
 };
 
 exports.getUserData = (req, res) => {
-  let userId = req.body.userId
+  let userId = req.body.userId;
   User.findOne({ _id: userId }, (err, user) => {
     if (err) {
       res.send(err);
@@ -38,6 +38,20 @@ exports.getUserData = (req, res) => {
       res.send(user);
     } else {
       res.send("user not found");
+    }
+  });
+};
+
+exports.checkEmail = (req, res) => {
+  let userEmail = req.body.userEmail;
+  User.findOne({ email: userEmail }, (err, user) => {
+    if (err) {
+      res.send(err);
+    }
+    if (user) {
+      res.send("used");
+    } else {
+      res.send("not used");
     }
   });
 };

@@ -1,12 +1,14 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 const {
   addNewUser,
   loginUser,
   getUserData,
+  checkEmail
 } = require("../controllers/userControllers");
 
-router.post("/api/add-new-user", addNewUser);
-router.post("/api/login-user", loginUser);
-router.post("/api/get-user-data", getUserData);
+router.post("/api/users/new", addNewUser);
+router.post("/api/users/login", loginUser);
+router.post("/api/users/get-data", getUserData);
+router.post("/api/users/check-email", checkEmail);
+
 module.exports = router;

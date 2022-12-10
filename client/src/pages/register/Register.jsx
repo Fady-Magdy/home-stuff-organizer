@@ -1,13 +1,21 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./register.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import Api from "../../api-link";
+import "./register.scss";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleExclamation,
+  faSquarePlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 const Register = () => {
+  const userSignedIn = useSelector((state) => state.user.signedIn);
   const navigate = useNavigate();
+
   const newUser = useRef({
     firstName: "",
     lastName: "",
@@ -16,12 +24,18 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  useEffect(() => {
+    if (userSignedIn) {
+      navigate("/");
+    }
+  }, [userSignedIn]);
+
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const conformPasswordRef = useRef(null);
-
+  const emailIsUsed = useRef(false);
   function changeValues(e) {
     let input = e.target;
     let parent = input.parentElement;
@@ -34,6 +48,18 @@ const Register = () => {
     } else {
       parent.classList.remove("red");
     }
+    axios
+      .post(`${Api}/api/users/check-email`, {
+        userEmail: newUser.current.email,
+      })
+      .then((result) => {
+        console.log(result.data);
+        if (result.data === "not used") {
+          emailIsUsed.current = false;
+        } else {
+          emailIsUsed.current = true;
+        }
+      });
   }
 
   function createAccount() {
@@ -76,6 +102,10 @@ const Register = () => {
         "Email is incorrect, e.g (someone@gmail.com)";
       emailParent.classList.add("red");
       return;
+    } else if (emailIsUsed.current) {
+      emailParent.querySelector(".message").innerText = "Email is used";
+      emailParent.classList.add("red");
+      return;
     } else {
       emailParent.classList.remove("red");
     }
@@ -113,7 +143,7 @@ const Register = () => {
       password: newUser.current.password,
     };
 
-    axios.post(`${Api}/api/add-new-user`, dataToSend).then(() => {
+    axios.post(`${Api}/api/users/new`, dataToSend).then(() => {
       newUser.current = {
         firstName: "",
         lastName: "",
@@ -190,7 +220,8 @@ const Register = () => {
           <FontAwesomeIcon icon={faCircleExclamation} />
         </div>
         <button className="register-btn" onClick={createAccount}>
-          Create Account
+          <FontAwesomeIcon icon={faSquarePlus} />
+          <span>Create Account</span>
         </button>
         <p className="have-account">
           Already have an account? <Link to="/login">Login</Link>

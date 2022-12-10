@@ -1,4 +1,4 @@
-## Home Stuff Organizer
+## Home Stuff Organizer (not complete)
 Visit: https://hso-fady-m.vercel.app/
 
 ---
@@ -34,4 +34,4 @@ Server Side:
 
 ---
 
-Made by Fady Magdy
+created by Fady Magdy

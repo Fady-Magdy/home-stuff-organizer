@@ -6,3 +6,12 @@
   color: #000;
   list-style: none;
 }
+body {
+  width: 100vw;
+  #root {
+    width: 100%;
+    .App {
+      width: 100%;
+    }
+  }
+}
