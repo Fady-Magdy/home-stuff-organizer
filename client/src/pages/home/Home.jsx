@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import "./home.scss";
+
+// API
 import axios from "axios";
 import Api from "../../api-link";
-import "./home.scss";
-import { useSelector } from "react-redux";
-
+// ------------------------------------------------------------
 const Home = () => {
+  // States
   const user = useSelector((state) => state.user.userData);
-  const userSignedIn = useSelector((state) => state.user.signedIn);
-
+  // ------------------------------------------------------------
+  // Functions
   function fetchVisitorIp() {
     let ip = "";
     axios.get("https://api.ipify.org/?format=json").then((result) => {
@@ -20,13 +23,16 @@ const Home = () => {
       axios.post(`${Api}/api/add-visitor-data`);
     });
   }
-
+  // ------------------------------------------------------------
+  // Use Effects
   useEffect(() => {
     fetchVisitorIp();
   }, []);
+  // ------------------------------------------------------------
+  // JSX
   return (
     <div className="home-page">
-      {userSignedIn && <h1>Welcome {user.firstName}</h1>}
+      {user.signedIn && <h1>Welcome {user.firstName}</h1>}
       <h1>Home</h1>
       <div></div>
     </div>

@@ -1,15 +1,24 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "./login.scss";
+
+// API
 import axios from "axios";
 import Api from "../../api-link";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-
+// Font Awesome
+import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
+import * as FA from "@fortawesome/free-solid-svg-icons";
+// -------------------------------------------------------------------
 const Login = () => {
+  // States
+  const user = useSelector((state) => state.user.userData);
+  const navigate = useNavigate();
+  const messageRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
   const loginData = useRef({
     email: "",
     password: "",
@@ -18,17 +27,15 @@ const Login = () => {
     email: "demo-user@gmail.com",
     password: "123123123",
   };
-  const userSignedIn = useSelector((state) => state.user.signedIn);
-  const navigate = useNavigate();
-  const messageRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-
+  // -------------------------------------------------------------------
+  // Use Effects
   useEffect(() => {
-    if (userSignedIn) {
+    if (user.signedIn) {
       navigate("/");
     }
-  }, [userSignedIn]);
+  }, [user.signedIn]);
+  // -------------------------------------------------------------------
+  // Functions
   function changeValues(e) {
     let input = e.target;
     loginData.current[input.id] = input.value;
@@ -36,9 +43,7 @@ const Login = () => {
 
   function login() {
     axios.post(`${Api}/api/users/login`, loginData.current).then((result) => {
-      if (result.data === "not found") {
-        messageRef.current.style.display = "inline-block";
-      } else if (result.data === "password wrong") {
+      if (result.data === "not found" || result.data === "password wrong") {
         messageRef.current.style.display = "inline-block";
       } else {
         localStorage.setItem("hso-userId", JSON.stringify(result.data._id));
@@ -54,6 +59,8 @@ const Login = () => {
       window.location.reload();
     });
   }
+  // -------------------------------------------------------------------
+  // JSX
   return (
     <div className="login-page">
       <div className="login-container">
@@ -83,7 +90,7 @@ const Login = () => {
           Email or Password is incorrect
         </p>
         <button className="login-btn" onClick={login}>
-          <FontAwesomeIcon icon={faRightToBracket} />
+          <FaIcon icon={FA.faRightToBracket} />
           <span>Login</span>
         </button>
         <p className="demo-user-text">

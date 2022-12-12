@@ -18,9 +18,8 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (localStorage.getItem("hso-userId")) {
-      dispatch(login());
+      dispatch(fetchUserData());
     }
-    dispatch(fetchUserData());
   }, []);
 
   return (

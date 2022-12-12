@@ -3,8 +3,9 @@ import axios from "axios";
 import Api from "../../api-link";
 const initialState = {
   status: "unknown",
-  signedIn: false,
-  userData: {},
+  userData: {
+    signedIn: false,
+  },
 };
 
 export const fetchUserData = createAsyncThunk(
@@ -29,14 +30,14 @@ export const userSlice = createSlice({
       state.userData = {};
     },
     login: (state) => {
-      state.signedIn = true;
+      state.userData.signedIn = true;
     },
   },
 
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
       if (payload === "user not found") return;
-      state.userData = payload;
+      state.userData = { ...payload, signedIn: true };
       state.status = "success";
     });
     builder.addCase(fetchUserData.pending, (state) => {

@@ -1,23 +1,25 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import "./newItemModal.scss";
+
+import axios from "axios";
 import Api from "../../api-link";
 import { fetchUserData } from "../../store/slices/userSlice";
-import "./newItemModal.scss";
+
 const NewItemModal = (props) => {
+  const [newName, setNewName] = useState("");
   const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
-  const [newName, setNewName] = useState("");
   const nameRef = useRef(null);
   let currentModalFor =
     props.currentModalFor[0].toUpperCase() + props.currentModalFor.slice(1);
+  // -------------------------------------------------------------------
+  // Functions
   function close() {
     props.setShowModal(false);
   }
-  function add() {
-    if (newName === "" ) return
+  function add(e) {
+    if (newName === "") return;
     let data = {
       userId: user._id,
       newName,
@@ -33,29 +35,34 @@ const NewItemModal = (props) => {
             ]._id
           : "",
     };
-    axios
-      .post(`${Api}/api/items/add-${props.currentModalFor}`, data)
-      .then((result) => {
-        if (props.currentModalFor === "room") {
-          props.setCurrentRoom(user.homeItems.length);
-        } else if (props.currentModalFor === "container") {
-          props.setCurrentContainer(
-            user.homeItems[props.currentRoom].roomContainers.length
-          );
-        } else {
-          props.setCurrentItem(
-            user.homeItems[props.currentRoom].roomContainers[
-              props.currentContainer
-            ].containerItems.length
-          );
-        }
-        dispatch(fetchUserData());
-        props.setShowModal(false);
-      });
+    if (e.key === "Enter" || e.target.className === "submit") {
+      axios
+        .post(`${Api}/api/items/add-${props.currentModalFor}`, data)
+        .then((result) => {
+          if (props.currentModalFor === "room") {
+            props.setCurrentRoom(user.homeItems.length);
+          } else if (props.currentModalFor === "container") {
+            props.setCurrentContainer(
+              user.homeItems[props.currentRoom].roomContainers.length
+            );
+          } else {
+            props.setCurrentItem(
+              user.homeItems[props.currentRoom].roomContainers[
+                props.currentContainer
+              ].containerItems.length
+            );
+          }
+          dispatch(fetchUserData());
+          props.setShowModal(false);
+        });
+    }
   }
+  // -------------------------------------------------------------------
+  // Use Effects
   useEffect(() => {
     nameRef.current.focus();
   }, []);
+  // -------------------------------------------------------------------
   return (
     <>
       <div onClick={close} className="new-modal-background"></div>
@@ -67,6 +74,7 @@ const NewItemModal = (props) => {
             <label htmlFor="name">{currentModalFor} name</label>
             <input
               onChange={(e) => setNewName(e.target.value)}
+              onKeyPress={add}
               id="name"
               type="text"
               placeholder={`Enter Name`}

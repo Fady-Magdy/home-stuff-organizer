@@ -1,48 +1,44 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./room.scss";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDoorClosed,
-  faBoxArchive,
-  faHammer,
-  faTrash,
-  faEdit,
-} from "@fortawesome/free-solid-svg-icons";
-import Api from "../../api-link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../store/slices/userSlice";
+import "./room.scss";
+
+import axios from "axios";
+import Api from "../../api-link";
+
+// Font Awesome
+import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
+import * as FA from "@fortawesome/free-solid-svg-icons";
+// -------------------------------------------------------------------------
 const Room = (props) => {
+  // States
   const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   const [activeRoom, setActiveRoom] = useState(false);
-  const numberOfItemsRef = useRef(0);
+  const itemsCountRef = useRef(0);
 
   const changeCurrentRoom = (e) => {
     props.setCurrentRoom(props.index);
     props.setCurrentContainer(0);
   };
+  // ----------------------------------------------------------------------
+  //  Use Effects
   useEffect(() => {
     if (props.currentRoom === props.index) {
-      setActiveRoom(true);
-      if (
-        user.homeItems &&
+      props.setCantAddItem(
         user.homeItems[props.currentRoom].roomContainers.length < 1
-      ) {
-        props.setCantAddItem(true);
-      } else {
-        props.setCantAddItem(false);
-      }
-    } else {
-      setActiveRoom(false);
+      );
     }
+    setActiveRoom(props.currentRoom === props.index);
 
-    numberOfItemsRef.current = 0;
+    // get count of total items inside this room to show in room card
+    itemsCountRef.current = 0;
     props.room.roomContainers.forEach((container) => {
-      numberOfItemsRef.current += container.containerItems.length;
+      itemsCountRef.current += container.containerItems.length;
     });
   }, [props.currentRoom, props.currentItem, props, user.homeItems]);
-
+  // ----------------------------------------------------------------------
+  //  Functions
   function deleteRoom() {
     let roomId = props.room._id;
     axios
@@ -53,7 +49,8 @@ const Room = (props) => {
         dispatch(fetchUserData());
       });
   }
-
+  // ----------------------------------------------------------------------
+  // JSX
   return (
     <div
       id="parent"
@@ -61,24 +58,24 @@ const Room = (props) => {
       className={`room ${activeRoom ? "active" : ""}`}
     >
       <h4 className="room-name">
-        <FontAwesomeIcon icon={faDoorClosed} />
+        <FaIcon icon={FA.faDoorClosed} />
         {props.room.roomName}
       </h4>
       <p>
-        <FontAwesomeIcon icon={faBoxArchive} />
+        <FaIcon icon={FA.faBoxArchive} />
         Containers: {props.room.roomContainers.length}
       </p>
       <div className="bottom">
         <span>
-          <FontAwesomeIcon icon={faHammer} />
-          Items: {numberOfItemsRef.current}
+          <FaIcon icon={FA.faHammer} />
+          Items: {itemsCountRef.current}
         </span>
         <div className="buttons">
           <button onClick={deleteRoom} className="delete-btn">
-            <FontAwesomeIcon icon={faTrash} />
+            <FaIcon icon={FA.faTrash} />
           </button>
           <button className="edit-btn">
-            <FontAwesomeIcon icon={faEdit} />
+            <FaIcon icon={FA.faEdit} />
           </button>
         </div>
       </div>

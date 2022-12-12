@@ -1,7 +1,6 @@
 const os = require("os");
-const platform = require("platform"); // library to get mobile name
 const satelize = require("satelize"); // to get visitor country and continent
-const visitors = require("../models/visitorModel");
+const Visitor = require("../models/visitorModel");
 
 function getDate() {
   let newDate = new Date();
@@ -50,19 +49,18 @@ exports.addVisitorData = (req, res) => {
   let visitorData = {
     username: os.userInfo().username,
     ipAddress: userIp,
-    deviceType: "req.device.type",
-    mobileName: platform.manufacturer || "Not Mobile",
+    deviceType: req.device.type,
     userCountry,
     userContinent,
     date: [date],
     time: [time],
     visitCount: 1,
   };
-  visitors.findOne({ ipAddress: visitorData.ipAddress }, (err, existingIp) => {
+  Visitor.findOne({ ipAddress: visitorData.ipAddress }, (err, existingIp) => {
     if (existingIp == null) {
-      visitors.create(visitorData);
+      Visitor.create(visitorData);
     } else {
-      visitors.updateOne(
+      Visitor.updateOne(
         { ipAddress: visitorData.ipAddress },
         { $inc: { visitCount: 1 }, $push: { date: date, time: time } },
         () => {}

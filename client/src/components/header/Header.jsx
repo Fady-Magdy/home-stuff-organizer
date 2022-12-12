@@ -1,24 +1,23 @@
 import React from "react";
-import "./header.scss";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./header.scss";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFile,
-  faPlus,
-  faRightFromBracket,
-  faRightToBracket,
-  faUserPlus,
-} from "@fortawesome/free-solid-svg-icons";
-
+//  Font Awesome
+import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
+import * as FA from "@fortawesome/free-solid-svg-icons";
+// ------------------------------------------------------
 const Header = () => {
-  const userSignedIn = useSelector((state) => state.user.signedIn);
-
+  // States
+  const user = useSelector((state) => state.user.userData);
+  // ---------------------------------------------------
+  // functions
   function logout() {
     localStorage.removeItem("hso-userId");
     window.location.reload();
   }
+  // ---------------------------------------------------
+  // JSX
   return (
     <header className="header">
       <div className="left">
@@ -28,30 +27,29 @@ const Header = () => {
         <ul>
           <li>
             <Link to="/items">
-              <FontAwesomeIcon icon={faFile} />
+              <FaIcon icon={FA.faFile} />
               <span>Your Items</span>
             </Link>
           </li>
-          {!userSignedIn && (
+          {!user.signedIn && (
             <>
               <li>
                 <Link to="/register">
-                  <FontAwesomeIcon icon={faUserPlus} />
+                  <FaIcon icon={FA.faUserPlus} />
                   <span>Register</span>
                 </Link>
               </li>
               <li>
                 <Link to="/login">
-                  <FontAwesomeIcon icon={faRightToBracket} />{" "}
-                  <span>log in</span>
+                  <FaIcon icon={FA.faRightToBracket} /> <span>log in</span>
                 </Link>
               </li>
             </>
           )}
-          {userSignedIn && (
+          {user.signedIn && (
             <li>
               <Link onClick={logout} to="/">
-                <FontAwesomeIcon icon={faRightFromBracket} />
+                <FaIcon icon={FA.faRightFromBracket} />
                 <span>Log out</span>
               </Link>
             </li>

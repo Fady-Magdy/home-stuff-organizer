@@ -1,20 +1,26 @@
 import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
-import Api from "../../api-link";
 import "./register.scss";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleExclamation,
-  faSquarePlus,
-} from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+// API
+import axios from "axios";
+import Api from "../../api-link";
 
+//  Font Awesome
+import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
+import * as FA from "@fortawesome/free-solid-svg-icons";
+// ------------------------------------------------------------
 const Register = () => {
-  const userSignedIn = useSelector((state) => state.user.signedIn);
+  // States
+  const user = useSelector((state) => state.user.userData);
   const navigate = useNavigate();
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const conformPasswordRef = useRef(null);
+  const emailIsUsed = useRef(false);
 
   const newUser = useRef({
     firstName: "",
@@ -24,18 +30,19 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  const demoUserData = {
+    email: "demo-user@gmail.com",
+    password: "123123123",
+  };
+  // ------------------------------------------------------------
+  // Use Effects
   useEffect(() => {
-    if (userSignedIn) {
+    if (user.signedIn) {
       navigate("/");
     }
-  }, [userSignedIn]);
-
-  const firstNameRef = useRef(null);
-  const lastNameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const conformPasswordRef = useRef(null);
-  const emailIsUsed = useRef(false);
+  }, [user.signedIn]);
+  // ------------------------------------------------------------
+  // Functions
   function changeValues(e) {
     let input = e.target;
     let parent = input.parentElement;
@@ -142,22 +149,27 @@ const Register = () => {
       password: newUser.current.password,
     };
 
-    axios.post(`${Api}/api/users/new`, dataToSend).then(() => {
-      newUser.current = {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      };
+    axios.post(`${Api}/api/users/new`, dataToSend).then((result) => {
+      if (result.data === "success") navigate("/login");
     });
-    navigate("/login");
   }
+
+  function loginToDemoUser() {
+    axios.post(`${Api}/api/users/login`, demoUserData).then((result) => {
+      localStorage.setItem("hso-userId", JSON.stringify(result.data._id));
+      navigate("/");
+      window.location.reload();
+    });
+  }
+  // ------------------------------------------------------------
+  // JSX
   return (
     <div className="register-page">
       <div className="register-container">
         <h2 className="register-title">Register</h2>
         <hr />
+        {/* --------------------------------------------------- */}
+        {/* First Name */}
         <div className="input-group">
           <label htmlFor="firstName">First Name *</label>
           <input
@@ -167,9 +179,11 @@ const Register = () => {
             ref={firstNameRef}
             onChange={changeValues}
           />
-          <p className="message">No issue</p>
-          <FontAwesomeIcon icon={faCircleExclamation} />
+          <p className="message"></p>
+          <FaIcon icon={FA.faCircleExclamation} />
         </div>
+        {/* --------------------------------------------------- */}
+        {/* Last Name */}
         <div className="input-group">
           <label htmlFor="lastName">Last Name *</label>
           <input
@@ -179,9 +193,11 @@ const Register = () => {
             ref={lastNameRef}
             onChange={changeValues}
           />
-          <p className="message">No issue</p>
-          <FontAwesomeIcon icon={faCircleExclamation} />
+          <p className="message"></p>
+          <FaIcon icon={FA.faCircleExclamation} />
         </div>
+        {/* --------------------------------------------------- */}
+        {/* Email */}
         <div className="input-group">
           <label htmlFor="email">Email *</label>
           <input
@@ -191,9 +207,11 @@ const Register = () => {
             ref={emailRef}
             onChange={changeValues}
           />
-          <p className="message">No issue</p>
-          <FontAwesomeIcon icon={faCircleExclamation} />
+          <p className="message"></p>
+          <FaIcon icon={FA.faCircleExclamation} />
         </div>
+        {/* --------------------------------------------------- */}
+        {/* Password */}
         <div className="input-group">
           <label htmlFor="password">Password *</label>
           <input
@@ -203,9 +221,11 @@ const Register = () => {
             ref={passwordRef}
             onChange={changeValues}
           />
-          <p className="message">No issue</p>
-          <FontAwesomeIcon icon={faCircleExclamation} />
+          <p className="message"></p>
+          <FaIcon icon={FA.faCircleExclamation} />
         </div>
+        {/* --------------------------------------------------- */}
+        {/* Confirm Password */}
         <div className="input-group">
           <label htmlFor="confirmPassword">Confirm Password *</label>
           <input
@@ -215,13 +235,17 @@ const Register = () => {
             ref={conformPasswordRef}
             onChange={changeValues}
           />
-          <p className="message">No issue</p>
-          <FontAwesomeIcon icon={faCircleExclamation} />
+          <p className="message"></p>
+          <FaIcon icon={FA.faCircleExclamation} />
         </div>
+        {/* --------------------------------------------------- */}
         <button className="register-btn" onClick={createAccount}>
-          <FontAwesomeIcon icon={faSquarePlus} />
+          <FaIcon icon={FA.faSquarePlus} />
           <span>Create Account</span>
         </button>
+        <p className="demo-user-text">
+          Or user <button onClick={loginToDemoUser}>Demo user</button>
+        </p>
         <p className="have-account">
           Already have an account? <Link to="/login">Login</Link>
         </p>

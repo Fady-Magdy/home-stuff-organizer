@@ -1,5 +1,17 @@
 const User = require("../models/userModel");
 
+exports.searchItem = (req, res) => {
+  let itemToSearch = req.body.searchFor;
+  let user = {};
+  User.find({ firstName: "Fady" }, (err, result) => {
+    user = { ...result[0]._doc };
+    let foundItem = user.homeItems.filter((item) =>
+      item.itemName.includes(itemToSearch)
+    );
+    res.send(foundItem);
+  });
+};
+
 exports.addRoom = (req, res) => {
   let userId = req.body.userId;
   let room = {
@@ -49,42 +61,18 @@ exports.addItem = (req, res) => {
   res.send("success");
 };
 
-exports.searchItem = (req, res) => {
-  let itemToSearch = req.body.searchFor;
-  let user = {};
-  User.find({ firstName: "Fady" }, (err, result) => {
-    user = { ...result[0]._doc };
-    let foundItem = user.homeItems.filter((item) =>
-      item.itemName.includes(itemToSearch)
-    );
-    res.send(foundItem);
-  });
-};
-
-exports.getAllItems = (req, res) => {
-  let userId = req.body.userId;
-  User.findOne({ _id: userId }, (err, user) => {
-    if (err) {
-      res.send("failed");
-    } else {
-      res.send(user);
-    }
-  });
-};
-
 exports.deleteRoom = (req, res) => {
   let userId = req.body.userId;
   let roomId = req.body.roomId;
   User.updateOne(
     { _id: userId },
-    { $pull: { homeItems: {_id: roomId} } },
-    (err, user) => {
+    { $pull: { homeItems: { _id: roomId } } },
+    (err, result) => {
       if (err) {
         console.log(err);
-        res.send(err)
+        res.send(err);
       }
-      console.log(user);
-      res.send(user)
+      res.send(result);
     }
   );
 };

@@ -12,7 +12,7 @@ Visit: https://hso-fady-m.vercel.app/
 
 ---
 
-### Packages & Technologies Used
+### Technologies Used
 
 Client Side:
 
@@ -26,12 +26,6 @@ Server Side:
 - Node.js
 - Express.js
 - Mongoose
-- Cors
-- Nodemon
-- dotenv
-- express-device
-- platform
-- satelize
 
 ---
 

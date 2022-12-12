@@ -1,10 +1,11 @@
-const Users = require("../models/userModel");
 const User = require("../models/userModel");
 
 exports.addNewUser = (req, res) => {
   newUser = req.body;
-  User.create(newUser);
-  res.status(200).send(newUser);
+  User.create(newUser, (err, result) => {
+    if (err) return res.send(err);
+    res.send("success");
+  });
 };
 
 exports.loginUser = (req, res) => {
