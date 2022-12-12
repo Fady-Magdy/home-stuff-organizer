@@ -14,6 +14,10 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const demoUserData = {
+    email: "demo-user@gmail.com",
+    password: "123123123",
+  };
   const userSignedIn = useSelector((state) => state.user.signedIn);
   const navigate = useNavigate();
   const messageRef = useRef(null);
@@ -38,17 +42,22 @@ const Login = () => {
         messageRef.current.style.display = "inline-block";
       } else {
         localStorage.setItem("hso-userId", JSON.stringify(result.data._id));
-        messageRef.current.style.display = "none";
         navigate("/");
         window.location.reload();
       }
     });
   }
-
+  function loginToDemoUser() {
+    axios.post(`${Api}/api/users/login`, demoUserData).then((result) => {
+      localStorage.setItem("hso-userId", JSON.stringify(result.data._id));
+      navigate("/");
+      window.location.reload();
+    });
+  }
   return (
-    <div className="register-page">
-      <div className="register-container">
-        <h2 className="register-title">Login</h2>
+    <div className="login-page">
+      <div className="login-container">
+        <h2 className="login-title">Login</h2>
         <hr />
         <div className="input-group">
           <label htmlFor="email">Email *</label>
@@ -73,10 +82,13 @@ const Login = () => {
         <p ref={messageRef} className="login-message">
           Email or Password is incorrect
         </p>
-        <button className="register-btn" onClick={login}>
+        <button className="login-btn" onClick={login}>
           <FontAwesomeIcon icon={faRightToBracket} />
           <span>Login</span>
         </button>
+        <p className="demo-user-text">
+          Or user <button onClick={loginToDemoUser}>Demo user</button>
+        </p>
         <p className="have-account">
           Don't have an account? <Link to="/register"> Register</Link>
         </p>

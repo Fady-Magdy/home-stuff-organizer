@@ -1,6 +1,6 @@
 @import "../../styles/variables.scss";
 
-.register-page {
+.register-page , .login-page {
   padding-top: 50px;
   display: flex;
   justify-content: center;
@@ -8,14 +8,14 @@
   height: calc(100vh - 50px);
   background-image: url(./images/background.png);
   background-size: cover;
-  .register-container {
+  .register-container , .login-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     width: 400px;
     text-align: center;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.281);
-    .register-title {
+    .register-title , .login-title {
       padding: 20px;
     }
     hr {
@@ -70,7 +70,7 @@
         }
       }
     }
-    .register-btn {
+    .register-btn , .login-btn {
       margin: 10px 0;
       width: 100%;
       padding: 15px;
