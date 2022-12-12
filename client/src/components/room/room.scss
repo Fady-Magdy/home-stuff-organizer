@@ -6,41 +6,113 @@
   border: 2px solid rgba(0, 0, 0, 0.315);
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.178);
   border-radius: 5px;
-  width: 200px;
+  min-width: 150px;
   cursor: pointer;
-  .room-name {
-    font-weight: 600;
-    line-height: 20px;
+  transition: 0.2s;
+  &:hover {
+    border: 2px solid rgba(0, 0, 0, 0.415);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.378);
+    .bottom {
+      .buttons {
+        transform: translate(0);
+      }
+    }
   }
-  p {
-    opacity: 0.8;
-    line-height: 20px;
+  svg {
+    font-size: 15px;
+    margin-right: 5px;
+    path {
+      color: $purple-color;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .room-name {
+    line-height: 25px;
+  }
+  .bottom {
+    line-height: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    .buttons {
+      transform: translate(65px);
+      display: flex;
+      gap: 5px;
+      transition: 0.4s;
+      button {
+        width: 20px;
+        height: 20px;
+        padding: 11px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        background-color: $purple-color;
+        border: none;
+        border-radius: 3px;
+        &:hover {
+          filter: brightness(1.4);
+        }
+        svg {
+          font-size: 14px;
+          margin: 0;
+          path {
+            color: $white-color;
+          }
+        }
+      }
+    }
   }
   &::before {
     content: "";
     position: absolute;
-    border: none;
-    border-radius: 0 40px 5px 0;
+    border-radius: 5px;
     right: 0;
-    top: -2px;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 0;
-    height: 100%;
+    height: 104%;
     background-color: $purple-color;
+    transition: 0.2s;
   }
   &.active {
     background-color: $purple-color;
     &::before {
       content: "";
-      border: inherit;
       border-left: none;
-      right: -27px;
-      width: 27px;
+      right: -17px;
+      width: 7px;
+    }
+    svg {
+      path {
+        color: #fff;
+      }
     }
     .room-name {
       color: #fff;
     }
     p {
       color: #fff;
+    }
+    .bottom {
+      span {
+        color: #fff;
+      }
+      .buttons {
+        button {
+          background-color: $white-color;
+          &:hover {
+            filter: brightness(0.8);
+          }
+          svg {
+            path {
+              color: $purple-color;
+            }
+          }
+        }
+      }
     }
   }
 }

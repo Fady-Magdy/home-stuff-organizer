@@ -7,7 +7,6 @@ import "./styles/app.scss";
 // Pages
 import Home from "./pages/home/Home";
 import Items from "./pages/items/Items";
-import NewItem from "./pages/newItem/NewItem.jsx";
 import Register from "./pages/register/Register";
 import Login from "./pages/login/Login";
 import NotFound404 from "./pages/notFound404/NotFound404";
@@ -32,7 +31,6 @@ function App() {
           <Route index path="/" element={<Home />} />
           <Route path="items">
             <Route index path="/items" element={<Items />} />
-            <Route path="new" element={<NewItem />} />
           </Route>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />

@@ -1,0 +1,74 @@
+@import "../../styles//variables.scss";
+
+.new-modal-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.281);
+  z-index: 4;
+}
+.item-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 5;
+  .top {
+    .title {
+      text-align: center;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      label {
+        padding-left: 2px;
+        font-weight: 600;
+        opacity: 0.7;
+      }
+      input {
+        padding-left: 10px;
+        height: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.534);
+        border-radius: 3px;
+        outline: none;
+      }
+    }
+  }
+  .close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px 7px;
+    border: 1px solid rgba(0, 0, 0, 0.527);
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+      background-color: red;
+      color: #fff;
+    }
+  }
+  .submit {
+    width: 100%;
+    padding: 10px;
+    background-color: $purple-color;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+      filter: brightness(1.2);
+    }
+  }
+}

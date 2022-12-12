@@ -53,7 +53,6 @@ const Register = () => {
         userEmail: newUser.current.email,
       })
       .then((result) => {
-        console.log(result.data);
         if (result.data === "not used") {
           emailIsUsed.current = false;
         } else {

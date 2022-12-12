@@ -1,88 +1,52 @@
 const User = require("../models/userModel");
 
-exports.addNewItem = (req, res) => {
+exports.addRoom = (req, res) => {
   let userId = req.body.userId;
-  let roomName = req.body.roomName;
-  let containerName = req.body.containerName;
-  let itemName = req.body.itemName;
-
-  let item = {
-    itemName,
-  };
-
-  let container = {
-    containerName,
-    containerItems: [item],
-  };
   let room = {
-    roomName,
-    roomContainers: [container],
+    roomName: req.body.newName,
   };
-  User.findOne({ _id: userId }, (err, user) => {
-    if (err) {
-      res.send(err);
-    } else {
-      let roomIsAdded = user.homeItems.find(
-        (room) => room.roomName === roomName
-      );
-      // If room is already exist
-      if (roomIsAdded) {
-        let containerIsAdded = roomIsAdded.roomContainers.find(
-          (container) => container.containerName === containerName
-        );
-        // If container is already exist
-        if (containerIsAdded) {
-          User.updateOne(
-            {
-              _id: userId,
-              "homeItems.roomName": roomName,
-              "homeItems.roomContainers.containerName": containerName,
-            },
-            { $push: { "homeItems.$.roomContainers.$[i].containerItems": item } },
-            { arrayFilters: [{
-              "i._id": containerIsAdded._id,
+  User.updateOne({ _id: userId }, { $push: { homeItems: room } }, () => {});
+  res.send("success");
+};
 
-            }] },
-            (err, result) => {
-              console.log(result);
-              if (err) {
-                console.log(err);
-                res.send(err);
-              } else {
-                res.send("success");
-              }
-            }
-          );
-          // If container not exist (create new room)
-        } else {
-          User.updateOne(
-            { _id: userId, "homeItems.roomName": roomName },
-            { $push: { "homeItems.$.roomContainers": container } },
-            (err, room) => {
-              if (err) {
-                res.send(err);
-              } else {
-                res.send("success");
-              }
-            }
-          );
-        }
-        // If room not exist (create new room)
-      } else {
-        User.updateOne(
-          { _id: userId },
-          { $push: { homeItems: room } },
-          (err) => {
-            if (err) {
-              res.send(err);
-            } else {
-              res.send("success");
-            }
-          }
-        );
+exports.addContainer = (req, res) => {
+  let userId = req.body.userId;
+  let roomId = req.body.roomId;
+  let container = {
+    containerName: req.body.newName,
+  };
+  User.updateOne(
+    { _id: userId, "homeItems._id": roomId },
+    { $push: { "homeItems.$.roomContainers": container } },
+    () => {}
+  );
+  res.send("success");
+};
+
+exports.addItem = (req, res) => {
+  let userId = req.body.userId;
+  let roomId = req.body.roomId;
+  let containerId = req.body.containerId;
+  let item = {
+    itemName: req.body.newName,
+  };
+  User.updateOne(
+    {
+      _id: userId,
+      "homeItems._id": roomId,
+      "homeItems.roomContainers._id": containerId,
+    },
+    { $push: { "homeItems.$.roomContainers.$[i].containerItems": item } },
+    {
+      arrayFilters: [{ "i._id": containerId }],
+    },
+    (err, user) => {
+      if (err) {
+        console.log(err);
       }
     }
-  });
+  );
+  res.send("success");
 };
 
 exports.searchItem = (req, res) => {
@@ -93,8 +57,6 @@ exports.searchItem = (req, res) => {
     let foundItem = user.homeItems.filter((item) =>
       item.itemName.includes(itemToSearch)
     );
-    console.log(itemToSearch);
-    console.log(foundItem);
     res.send(foundItem);
   });
 };
@@ -108,4 +70,21 @@ exports.getAllItems = (req, res) => {
       res.send(user);
     }
   });
+};
+
+exports.deleteRoom = (req, res) => {
+  let userId = req.body.userId;
+  let roomId = req.body.roomId;
+  User.updateOne(
+    { _id: userId },
+    { $pull: { homeItems: {_id: roomId} } },
+    (err, user) => {
+      if (err) {
+        console.log(err);
+        res.send(err)
+      }
+      console.log(user);
+      res.send(user)
+    }
+  );
 };

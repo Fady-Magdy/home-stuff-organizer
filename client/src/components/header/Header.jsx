@@ -32,12 +32,6 @@ const Header = () => {
               <span>Your Items</span>
             </Link>
           </li>
-          <li>
-            <Link to="/items/new">
-              <FontAwesomeIcon icon={faPlus} />
-              <span>Add Item</span>
-            </Link>
-          </li>
           {!userSignedIn && (
             <>
               <li>

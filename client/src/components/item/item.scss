@@ -1,6 +1,6 @@
 @import "../../styles//variables.scss";
 
-.container {
+.item {
   padding: 10px;
   border: 2px solid rgba(0, 0, 0, 0.315);
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.178);
@@ -18,7 +18,7 @@
       color: $purple-color;
     }
   }
-  .container-name {
+  .item-name {
     line-height: 25px;
   }
   p {
@@ -33,7 +33,7 @@
         color: #fff;
       }
     }
-    .container-name {
+    .item-name {
       color: #fff;
     }
     p {
