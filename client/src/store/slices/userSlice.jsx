@@ -3,6 +3,7 @@ import axios from "axios";
 import Api from "../../api-link";
 const initialState = {
   status: "unknown",
+  accountActive: false,
   userData: {
     signedIn: false,
   },
@@ -27,10 +28,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      state.accountActive = false
       state.userData = {};
     },
-    login: (state) => {
-      state.userData.signedIn = true;
+    activateAccount: (state) => {
+      state.accountActive = true;
     },
   },
 
@@ -49,5 +51,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { getUserData, logout, login } = userSlice.actions;
+export const { getUserData, logout, activateAccount } = userSlice.actions;
 export default userSlice.reducer;

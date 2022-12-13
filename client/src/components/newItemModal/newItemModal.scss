@@ -7,8 +7,9 @@
   transform: translate(-50%, -50%);
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.281);
+  background-color: rgba(0, 0, 0, 0.363);
   z-index: 4;
+  animation: show-modal 0.3s;
 }
 .item-modal {
   position: absolute;
@@ -16,56 +17,79 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
-  height: 400px;
-  background-color: #fff;
+  background-color: $white-color;
   padding: 20px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.356);
   z-index: 5;
+  transition: 0.4s;
+  animation: show-modal 0.5s;
+  @keyframes show-modal {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
   .top {
     .title {
       text-align: center;
+      margin-bottom: 5px;
+    }
+    .will-be-added-in {
+      text-align: center;
+      margin-bottom: 5px;
     }
     .input-group {
       display: flex;
       flex-direction: column;
+      margin-bottom: 10px;
       label {
         padding-left: 2px;
+        font-size: 17px;
         font-weight: 600;
         opacity: 0.7;
       }
       input {
         padding-left: 10px;
-        height: 30px;
+        height: 40px;
         border: 1px solid rgba(0, 0, 0, 0.534);
         border-radius: 3px;
         outline: none;
       }
     }
   }
+
   .close {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    padding: 5px 7px;
-    border: 1px solid rgba(0, 0, 0, 0.527);
+    top: 20px;
+    right: 20px;
+    padding: 5px 9px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.699);
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.267);
     border-radius: 5px;
     cursor: pointer;
     &:hover {
-      background-color: red;
+      background-color: $red-color;
       color: #fff;
     }
   }
   .submit {
+    margin-top: 10px;
     width: 100%;
     padding: 10px;
     background-color: $purple-color;
     color: #fff;
     border: none;
     border-radius: 5px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: 500;
     cursor: pointer;
     &:hover {
       filter: brightness(1.2);

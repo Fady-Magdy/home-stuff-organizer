@@ -9,7 +9,7 @@ import * as FA from "@fortawesome/free-solid-svg-icons";
 // ------------------------------------------------------
 const Header = () => {
   // States
-  const user = useSelector((state) => state.user.userData);
+  const accountActive = useSelector((state) => state.user.accountActive);
   // ---------------------------------------------------
   // functions
   function logout() {
@@ -27,11 +27,11 @@ const Header = () => {
         <ul>
           <li>
             <Link to="/items">
-              <FaIcon icon={FA.faFile} />
+              <FaIcon icon={FA.faTabletScreenButton} />
               <span>Your Items</span>
             </Link>
           </li>
-          {!user.signedIn && (
+          {!accountActive && (
             <>
               <li>
                 <Link to="/register">
@@ -46,7 +46,7 @@ const Header = () => {
               </li>
             </>
           )}
-          {user.signedIn && (
+          {accountActive && (
             <li>
               <Link onClick={logout} to="/">
                 <FaIcon icon={FA.faRightFromBracket} />

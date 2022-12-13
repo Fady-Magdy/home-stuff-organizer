@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { fetchUserData, login } from "./store/slices/userSlice";
+import { fetchUserData, activateAccount } from "./store/slices/userSlice";
 import "./styles/app.scss";
 
 // Pages
@@ -19,9 +19,9 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("hso-userId")) {
       dispatch(fetchUserData());
+      dispatch(activateAccount())
     }
   }, []);
-
   return (
     <div className="App">
       <BrowserRouter basename="/">

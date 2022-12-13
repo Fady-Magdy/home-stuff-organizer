@@ -6,11 +6,17 @@
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.178);
   border-radius: 5px;
   min-width: 150px;
+  min-height: 60px;
   cursor: pointer;
   transition: 0.2s;
   &:hover {
     border: 2px solid rgba(0, 0, 0, 0.415);
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.378);
+    .bottom {
+      .buttons {
+        transform: translate(0);
+      }
+    }
   }
   svg {
     margin-right: 5px;
@@ -19,11 +25,50 @@
     }
   }
   .item-name {
-    line-height: 25px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
-  p {
-    line-height: 25px;
+  span {
     opacity: 0.8;
+  }
+  .bottom {
+    line-height: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+    .buttons {
+      transform: translate(65px);
+      display: flex;
+      gap: 5px;
+      transition: 0.4s;
+      button {
+        width: 20px;
+        height: 20px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        background-color: $purple-color;
+        border: none;
+        border-radius: 3px;
+        &.confirm {
+          background-color: $red-color;
+        }
+        &:hover {
+          filter: brightness(1.4);
+        }
+        svg {
+          font-size: 13px;
+          margin: 0;
+          path {
+            color: $white-color;
+          }
+        }
+      }
+    }
   }
   &.active {
     background-color: $purple-color;
@@ -36,8 +81,34 @@
     .item-name {
       color: #fff;
     }
-    p {
+    span {
       color: #fff;
+    }
+    .bottom {
+      span {
+        color: #fff;
+      }
+      .buttons {
+        button {
+          &.confirm {
+            background-color: $red-color;
+            svg {
+              path {
+                color: $white-color;
+              }
+            }
+          }
+          background-color: $white-color;
+          &:hover {
+            filter: brightness(0.8);
+          }
+          svg {
+            path {
+              color: $purple-color;
+            }
+          }
+        }
+      }
     }
   }
 }

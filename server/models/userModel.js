@@ -32,6 +32,9 @@ const UserSchema = new mongoose.Schema({
               itemName: {
                 type: String,
               },
+              itemQuantity: {
+                type: Number,
+              },
             },
           ],
         },

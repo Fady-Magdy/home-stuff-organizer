@@ -13,6 +13,7 @@ import * as FA from "@fortawesome/free-solid-svg-icons";
 // ------------------------------------------------------------
 const Register = () => {
   // States
+  const accountActive = useSelector((state) => state.user.accountActive);
   const user = useSelector((state) => state.user.userData);
   const navigate = useNavigate();
   const firstNameRef = useRef(null);
@@ -37,10 +38,10 @@ const Register = () => {
   // ------------------------------------------------------------
   // Use Effects
   useEffect(() => {
-    if (user.signedIn) {
+    if (accountActive) {
       navigate("/");
     }
-  }, [user.signedIn]);
+  }, [accountActive]);
   // ------------------------------------------------------------
   // Functions
   function changeValues(e) {
@@ -244,7 +245,7 @@ const Register = () => {
           <span>Create Account</span>
         </button>
         <p className="demo-user-text">
-          Or user <button onClick={loginToDemoUser}>Demo user</button>
+          Or use <button onClick={loginToDemoUser}>Demo user</button>
         </p>
         <p className="have-account">
           Already have an account? <Link to="/login">Login</Link>

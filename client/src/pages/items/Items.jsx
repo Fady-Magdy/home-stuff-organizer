@@ -33,6 +33,7 @@ const Items = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [currentModalFor, setCurrentModalFor] = useState("");
+  const [currentModalType, setCurrentModalType] = useState("");
 
   // used to blocking add buttons
   const [cantAddContainer, setCantAddContainer] = useState(true);
@@ -64,17 +65,23 @@ const Items = () => {
     setCantAddItem,
     totalRooms,
     setTotalRooms,
+    currentModalType,
+    setCurrentModalType,
+    showNewModal,
   };
   // ---------------------------------------------------------------
   // functions
-  function showNewModal(forWhat) {
+  function showNewModal(forWhat, modalType) {
+    setCurrentModalType(modalType);
     setCurrentModalFor(forWhat);
     setShowModal(true);
   }
   // ---------------------------------------------------------------
   // Use Effects
   useEffect(() => {
-    dispatch(fetchUserData());
+    if (!showModal) {
+      dispatch(fetchUserData());
+    }
   }, [showModal]);
 
   useEffect(() => {
@@ -141,7 +148,7 @@ const Items = () => {
         {user.signedIn && (
           <div className="section-tools">
             <p>Total: {user.homeItems.length}</p>
-            <button onClick={() => showNewModal("room")}>
+            <button onClick={() => showNewModal("room", "new")}>
               <FaIcon icon={FA.faPlus} />
             </button>
           </div>
@@ -170,7 +177,7 @@ const Items = () => {
           <div className="section-tools">
             <p>Total: {totalContainers}</p>
             <button
-              onClick={() => showNewModal("container")}
+              onClick={() => showNewModal("container", "new")}
               disabled={cantAddContainer}
             >
               <FaIcon icon={FA.faPlus} />
@@ -209,7 +216,10 @@ const Items = () => {
         {user.signedIn && (
           <div className="section-tools">
             <p>Total: {totalItems}</p>
-            <button onClick={() => showNewModal("item")} disabled={cantAddItem}>
+            <button
+              onClick={() => showNewModal("item", "new")}
+              disabled={cantAddItem}
+            >
               <FaIcon icon={FA.faPlus} />
             </button>
           </div>

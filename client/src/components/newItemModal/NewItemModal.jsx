@@ -8,11 +8,30 @@ import { fetchUserData } from "../../store/slices/userSlice";
 
 const NewItemModal = (props) => {
   const [newName, setNewName] = useState("");
+  const [newQuantity, setNewQuantity] = useState(1);
+  const nameRef = useRef(null);
+  const quantityRef = useRef(null);
+
   const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
-  const nameRef = useRef(null);
   let currentModalFor =
     props.currentModalFor[0].toUpperCase() + props.currentModalFor.slice(1);
+  let currentModalType =
+    props.currentModalType[0].toUpperCase() + props.currentModalType.slice(1);
+
+  const [inItem, setInItem] = useState(() => {
+    if (currentModalFor === "Container") return "Room";
+    if (currentModalFor === "Item") return "Container";
+  });
+  const [inItemName, setInItemName] = useState(() => {
+    if (!user.signedIn) return "";
+    if (currentModalFor === "Container")
+      return user.homeItems[props.currentRoom].roomName;
+    if (currentModalFor === "Item")
+      return user.homeItems[props.currentRoom].roomContainers[
+        props.currentContainer
+      ].containerName;
+  });
   // -------------------------------------------------------------------
   // Functions
   function close() {
@@ -20,37 +39,71 @@ const NewItemModal = (props) => {
   }
   function add(e) {
     if (newName === "") return;
-    let data = {
-      userId: user._id,
-      newName,
-      roomId:
-        props.currentModalFor === "container" ||
-        props.currentModalFor === "item"
-          ? user.homeItems[props.currentRoom]._id
-          : "",
-      containerId:
-        props.currentModalFor === "item"
+    let data = {};
+    if (props.currentModalType === "new") {
+      data = {
+        newName,
+        newQuantity,
+        userId: user._id,
+        roomId:
+          props.currentModalFor === "container" ||
+          props.currentModalFor === "item"
+            ? user.homeItems[props.currentRoom]._id
+            : "",
+        containerId:
+          props.currentModalFor === "item"
+            ? user.homeItems[props.currentRoom].roomContainers[
+                props.currentContainer
+              ]._id
+            : "",
+      };
+    } else {
+      data = {
+        newName,
+        newQuantity,
+        userId: user._id,
+        roomId: user.homeItems[props.currentRoom]._id,
+        containerId: user.homeItems[props.currentRoom].roomContainers[
+          props.currentContainer
+        ]
           ? user.homeItems[props.currentRoom].roomContainers[
               props.currentContainer
             ]._id
           : "",
-    };
+        itemId: user.homeItems[props.currentRoom].roomContainers[
+          props.currentContainer
+        ]
+          ? user.homeItems[props.currentRoom].roomContainers[
+              props.currentContainer
+            ].containerItems[props.currentItem]
+            ? user.homeItems[props.currentRoom].roomContainers[
+                props.currentContainer
+              ].containerItems[props.currentItem]._id
+            : ""
+          : "",
+      };
+    }
     if (e.key === "Enter" || e.target.className === "submit") {
       axios
-        .post(`${Api}/api/items/add-${props.currentModalFor}`, data)
+        .post(
+          `${Api}/api/items/${props.currentModalType}-${props.currentModalFor}`,
+          data
+        )
         .then((result) => {
-          if (props.currentModalFor === "room") {
-            props.setCurrentRoom(user.homeItems.length);
-          } else if (props.currentModalFor === "container") {
-            props.setCurrentContainer(
-              user.homeItems[props.currentRoom].roomContainers.length
-            );
-          } else {
-            props.setCurrentItem(
-              user.homeItems[props.currentRoom].roomContainers[
-                props.currentContainer
-              ].containerItems.length
-            );
+          if (props.currentModalType === "new") {
+            if (props.currentModalFor === "room") {
+              props.setCurrentRoom(user.homeItems.length);
+            } else if (props.currentModalFor === "container") {
+              props.setCurrentContainer(
+                user.homeItems[props.currentRoom].roomContainers.length
+              );
+            } else {
+              props.setCurrentItem(
+                user.homeItems[props.currentRoom].roomContainers[
+                  props.currentContainer
+                ].containerItems.length
+              );
+            }
           }
           dispatch(fetchUserData());
           props.setShowModal(false);
@@ -61,14 +114,54 @@ const NewItemModal = (props) => {
   // Use Effects
   useEffect(() => {
     nameRef.current.focus();
-  }, []);
+    if (props.currentModalType === "edit") {
+      let oldName = "";
+      let oldQuantity = 0;
+      if (props.currentModalFor === "room") {
+        oldName = user.homeItems[props.currentRoom].roomName;
+      } else if (props.currentModalFor === "container") {
+        oldName =
+          user.homeItems[props.currentRoom].roomContainers[
+            props.currentContainer
+          ].containerName;
+      } else if (props.currentModalFor === "item") {
+        oldName =
+          user.homeItems[props.currentRoom].roomContainers[
+            props.currentContainer
+          ].containerItems[props.currentItem].itemName;
+        oldQuantity =
+          user.homeItems[props.currentRoom].roomContainers[
+            props.currentContainer
+          ].containerItems[props.currentItem].itemQuantity;
+        quantityRef.current.value = oldQuantity;
+        setNewQuantity(oldQuantity);
+      }
+
+      nameRef.current.value = oldName;
+      setNewName(oldName);
+    }
+  }, [
+    props.currentContainer,
+    props.currentItem,
+    props.currentModalFor,
+    props.currentModalType,
+    props.currentRoom,
+    user.homeItems,
+  ]);
   // -------------------------------------------------------------------
   return (
     <>
       <div onClick={close} className="new-modal-background"></div>
       <div className="item-modal">
         <div className="top">
-          <h2 className="title">New {currentModalFor}</h2>
+          <h2 className="title">
+            {currentModalType} {currentModalFor}
+          </h2>
+          {currentModalType === "New" && currentModalFor !== "Room" && (
+            <p className="will-be-added-in">
+              In {inItem} ({inItemName})
+            </p>
+          )}
           <hr />
           <div className="input-group">
             <label htmlFor="name">{currentModalFor} name</label>
@@ -77,13 +170,27 @@ const NewItemModal = (props) => {
               onKeyPress={add}
               id="name"
               type="text"
+              autoComplete="off"
               placeholder={`Enter Name`}
               ref={nameRef}
             />
           </div>
+          {currentModalFor === "Item" && (
+            <div className="input-group">
+              <label htmlFor="quantity">{currentModalFor} quantity</label>
+              <input
+                onChange={(e) => setNewQuantity(e.target.value)}
+                id="name"
+                type="number"
+                placeholder={`Enter quantity`}
+                value={newQuantity}
+                ref={quantityRef}
+              />
+            </div>
+          )}
         </div>
         <button onClick={add} className="submit">
-          Add {currentModalFor}
+          {currentModalType === "New" ? "Add" : "Edit"} {currentModalFor}
         </button>
         <button onClick={close} className="close">
           X

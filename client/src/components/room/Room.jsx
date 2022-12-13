@@ -13,11 +13,14 @@ import * as FA from "@fortawesome/free-solid-svg-icons";
 const Room = (props) => {
   // States
   const user = useSelector((state) => state.user.userData);
+  const userStatus = useSelector((state) => state.user.status);
   const dispatch = useDispatch();
   const [activeRoom, setActiveRoom] = useState(false);
   const itemsCountRef = useRef(0);
-
-  const changeCurrentRoom = (e) => {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
+  const changeCurrentRoom = () => {
     props.setCurrentRoom(props.index);
     props.setCurrentContainer(0);
   };
@@ -40,20 +43,30 @@ const Room = (props) => {
   // ----------------------------------------------------------------------
   //  Functions
   function deleteRoom() {
-    let roomId = props.room._id;
-    axios
-      .delete(`${Api}/api/items/delete-room`, {
-        data: { roomId: roomId, userId: user._id },
-      })
-      .then((result) => {
-        dispatch(fetchUserData());
-      });
+    if (confirmDelete) {
+      let roomId = props.room._id;
+      axios
+        .delete(`${Api}/api/items/delete-room`, {
+          data: { roomId: roomId, userId: user._id },
+        })
+        .then((result) => {
+          dispatch(fetchUserData());
+        });
+      setLoadingMessage("Deleting...");
+      setDeleting(true);
+    }
+    setConfirmDelete(true);
+    setTimeout(() => {
+      setConfirmDelete(false);
+    }, 1500);
   }
   // ----------------------------------------------------------------------
   // JSX
+  if (deleting) {
+    return <div className="room active loading">{loadingMessage}</div>;
+  }
   return (
     <div
-      id="parent"
       onClick={changeCurrentRoom}
       className={`room ${activeRoom ? "active" : ""}`}
     >
@@ -71,10 +84,16 @@ const Room = (props) => {
           Items: {itemsCountRef.current}
         </span>
         <div className="buttons">
-          <button onClick={deleteRoom} className="delete-btn">
+          <button
+            onClick={deleteRoom}
+            className={`delete-btn ${confirmDelete ? "confirm" : ""}`}
+          >
             <FaIcon icon={FA.faTrash} />
           </button>
-          <button className="edit-btn">
+          <button
+            onClick={() => props.showNewModal("room", "edit")}
+            className="edit-btn"
+          >
             <FaIcon icon={FA.faEdit} />
           </button>
         </div>
