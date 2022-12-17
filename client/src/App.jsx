@@ -13,13 +13,14 @@ import NotFound404 from "./pages/notFound404/NotFound404";
 
 // components
 import Header from "./components/header/Header";
+import UserImage from "./pages/userImage/UserImage";
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (localStorage.getItem("hso-userId")) {
       dispatch(fetchUserData());
-      dispatch(activateAccount())
+      dispatch(activateAccount());
     }
   }, []);
   return (
@@ -30,6 +31,11 @@ function App() {
           <Route index path="/" element={<Home />} />
           <Route path="items">
             <Route index path="/items" element={<Items />} />
+          </Route>
+
+          <Route path="profile">
+            <Route index path="/profile" element={<div>Profile</div>} />
+            <Route index path="/profile/update-image" element={<UserImage />} />
           </Route>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />

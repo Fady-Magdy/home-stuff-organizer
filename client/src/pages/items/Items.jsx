@@ -20,7 +20,7 @@ const Items = () => {
   //  index of current(room, container, item)
   const [currentRoom, setCurrentRoom] = useState(0);
   const [currentContainer, setCurrentContainer] = useState(0);
-  const [currentItem, setCurrentItem] = useState(null);
+  const [currentItem, setCurrentItem] = useState(0);
 
   // check how many items showing up
   const [currentContainersCount, setCurrentContainersCount] = useState(0);
@@ -39,6 +39,9 @@ const Items = () => {
   const [cantAddContainer, setCantAddContainer] = useState(true);
   const [cantAddItem, setCantAddItem] = useState(true);
 
+  const [currentRoomObj, setCurrentRoomObj] = useState(null);
+  const [currentContainerObj, setCurrentContainerObj] = useState(null);
+  const [currentItemObj, setCurrentItemObj] = useState(null);
   let allProps = {
     user,
     currentRoom,
@@ -68,6 +71,13 @@ const Items = () => {
     currentModalType,
     setCurrentModalType,
     showNewModal,
+    currentRoomObj,
+    setCurrentRoomObj,
+    currentContainerObj,
+    setCurrentContainerObj,
+    currentItemObj,
+    setCurrentItemObj,
+    refreshData,
   };
   // ---------------------------------------------------------------
   // functions
@@ -76,25 +86,24 @@ const Items = () => {
     setCurrentModalFor(forWhat);
     setShowModal(true);
   }
-  // ---------------------------------------------------------------
-  // Use Effects
-  useEffect(() => {
-    if (!showModal) {
-      dispatch(fetchUserData());
-    }
-  }, [showModal]);
-
-  useEffect(() => {
+  function refreshData() {
     if (user.signedIn) {
+      setCurrentRoomObj(
+        user.homeItems[currentRoom] ? user.homeItems[currentRoom] : null
+      );
+      setCurrentContainerObj(
+        currentRoomObj
+          ? currentRoomObj.roomContainers[currentContainer] || null
+          : null
+      );
+      setCurrentItemObj(
+        currentRoomObj && currentContainerObj
+          ? currentContainerObj.containerItems[currentItem] || null
+          : null
+      );
       // get current items count
-      if (
-        user.homeItems[currentRoom] &&
-        user.homeItems[currentRoom].roomContainers[currentContainer]
-      ) {
-        setCurrentItemsCount(
-          user.homeItems[currentRoom].roomContainers[currentContainer]
-            .containerItems.length
-        );
+      if (currentContainerObj) {
+        setCurrentItemsCount(currentContainerObj.containerItems.length);
       }
       // get total containers count
       setTotalContainers(0);
@@ -117,23 +126,37 @@ const Items = () => {
       if (totalRooms < 1) {
         setCurrentContainersCount(0);
       }
-      if (user.homeItems[currentRoom]) {
-        setCurrentContainersCount(
-          user.homeItems[currentRoom].roomContainers.length
-        );
+      if (currentRoomObj) {
+        setCurrentContainersCount(currentRoomObj.roomContainers.length);
       }
       if (currentContainersCount === 0) {
         setCurrentItemsCount(0);
       }
     }
+  }
+  // ---------------------------------------------------------------
+  // Use Effects
+  useEffect(() => {
+    if (!showModal) {
+      dispatch(fetchUserData());
+    }
+  }, [dispatch, showModal]);
+
+  useEffect(() => {
+    refreshData();
   }, [
-    cantAddContainer,
-    currentContainer,
     currentContainersCount,
     currentRoom,
+    currentContainer,
+    currentItem,
+    currentRoomObj,
+    currentContainerObj,
+    currentItemObj,
     totalRooms,
-    user,
+    totalContainers,
+    totalItems,
     user.homeItems,
+    user.signedIn,
   ]);
   // ---------------------------------------------------------------
   // JSX

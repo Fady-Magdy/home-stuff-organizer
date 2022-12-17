@@ -56,3 +56,17 @@ exports.checkEmail = (req, res) => {
     }
   });
 };
+
+exports.updateUserImage = (req, res) => {
+  let { userId, userImage } = req.body;
+  User.updateOne(
+    { _id: userId },
+    { $set: { profileImage: userImage } },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(result);
+    }
+  );
+};

@@ -11,9 +11,11 @@ import Api from "../../api-link";
 const Container = (props) => {
   // States
   const user = useSelector((state) => state.user.userData);
+  const dispatch = useDispatch();
   const [activeContainer, setActiveContainer] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const dispatch = useDispatch();
+  const [deleting, setDeleting] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
   // ---------------------------------------------------------
   // Use Effects
   useEffect(() => {
@@ -39,6 +41,8 @@ const Container = (props) => {
         .then((result) => {
           dispatch(fetchUserData());
         });
+      setLoadingMessage("Deleting...");
+      setDeleting(true);
     }
     setConfirmDelete(true);
     setTimeout(() => {
@@ -46,7 +50,9 @@ const Container = (props) => {
     }, 1500);
   }
   // ---------------------------------------------------------
-
+  if (deleting) {
+    return <div className="container active loading">{loadingMessage}</div>;
+  }
   return (
     <div
       onClick={changeCurrentContainer}

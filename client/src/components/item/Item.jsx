@@ -1,19 +1,22 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./item.scss";
-
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../../store/slices/userSlice";
+// Font Awesome
 import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
 import * as FA from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+// API
 import axios from "axios";
 import Api from "../../api-link";
-import { fetchUserData } from "../../store/slices/userSlice";
-
+// -------------------------------------------------------------------------
 const Item = (props) => {
   const user = useSelector((state) => state.user.userData);
+  const dispatch = useDispatch();
   const [activeItem, setActiveItem] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const dispatch = useDispatch();
+  const [deleting, setDeleting] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
   // -------------------------------------------------------
   // Use Effects
   useEffect(() => {
@@ -39,6 +42,8 @@ const Item = (props) => {
         .then((result) => {
           dispatch(fetchUserData());
         });
+      setLoadingMessage("Deleting...");
+      setDeleting(true);
     }
     setConfirmDelete(true);
     setTimeout(() => {
@@ -46,6 +51,10 @@ const Item = (props) => {
     }, 1500);
   }
   // -------------------------------------------------------
+  // JSX
+  if (deleting) {
+    return <div className="item active loading">{loadingMessage}</div>;
+  }
   return (
     <div
       onClick={changeCurrentItem}

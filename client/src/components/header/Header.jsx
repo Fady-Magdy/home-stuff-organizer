@@ -9,6 +9,7 @@ import * as FA from "@fortawesome/free-solid-svg-icons";
 // ------------------------------------------------------
 const Header = () => {
   // States
+  const user = useSelector((state) => state.user.userData);
   const accountActive = useSelector((state) => state.user.accountActive);
   // ---------------------------------------------------
   // functions
@@ -55,6 +56,21 @@ const Header = () => {
             </li>
           )}
         </ul>
+        {accountActive && (
+          <Link to="/profile/update-image">
+            <div className="user-image">
+              <img
+                src={require(`../../images/${
+                  user.profileImage || "default"
+                }.png`)}
+                alt="user"
+              />
+              <div className="edit">
+                <FaIcon icon={FA.faEdit} />
+              </div>
+            </div>
+          </Link>
+        )}
       </div>
     </header>
   );

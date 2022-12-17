@@ -25,64 +25,34 @@ const NewItemModal = (props) => {
   });
   const [inItemName, setInItemName] = useState(() => {
     if (!user.signedIn) return "";
-    if (currentModalFor === "Container")
-      return user.homeItems[props.currentRoom].roomName;
+    if (currentModalFor === "Container") return props.currentRoomObj.roomName;
     if (currentModalFor === "Item")
-      return user.homeItems[props.currentRoom].roomContainers[
-        props.currentContainer
-      ].containerName;
+      return props.currentContainerObj.containerName;
   });
   // -------------------------------------------------------------------
   // Functions
   function close() {
     props.setShowModal(false);
   }
-  function add(e) {
+  function submit(e) {
     if (newName === "") return;
-    let data = {};
-    if (props.currentModalType === "new") {
-      data = {
-        newName,
-        newQuantity,
-        userId: user._id,
-        roomId:
-          props.currentModalFor === "container" ||
-          props.currentModalFor === "item"
-            ? user.homeItems[props.currentRoom]._id
-            : "",
-        containerId:
-          props.currentModalFor === "item"
-            ? user.homeItems[props.currentRoom].roomContainers[
-                props.currentContainer
-              ]._id
-            : "",
-      };
-    } else {
-      data = {
-        newName,
-        newQuantity,
-        userId: user._id,
-        roomId: user.homeItems[props.currentRoom]._id,
-        containerId: user.homeItems[props.currentRoom].roomContainers[
-          props.currentContainer
-        ]
-          ? user.homeItems[props.currentRoom].roomContainers[
-              props.currentContainer
-            ]._id
-          : "",
-        itemId: user.homeItems[props.currentRoom].roomContainers[
-          props.currentContainer
-        ]
-          ? user.homeItems[props.currentRoom].roomContainers[
-              props.currentContainer
-            ].containerItems[props.currentItem]
-            ? user.homeItems[props.currentRoom].roomContainers[
-                props.currentContainer
-              ].containerItems[props.currentItem]._id
-            : ""
-          : "",
-      };
-    }
+    let roomId = props.currentRoomObj ? props.currentRoomObj._id : "";
+    let containerId = props.currentContainerObj
+      ? props.currentContainerObj._id
+      : "";
+    let itemId = props.currentContainerObj
+      ? props.currentItemObj
+        ? props.currentItemObj._id
+        : ""
+      : "";
+    let data = {
+      newName,
+      newQuantity,
+      userId: user._id,
+      roomId,
+      containerId,
+      itemId,
+    };
     if (e.key === "Enter" || e.target.className === "submit") {
       axios
         .post(
@@ -95,13 +65,11 @@ const NewItemModal = (props) => {
               props.setCurrentRoom(user.homeItems.length);
             } else if (props.currentModalFor === "container") {
               props.setCurrentContainer(
-                user.homeItems[props.currentRoom].roomContainers.length
+                props.currentRoomObj.roomContainers.length
               );
             } else {
               props.setCurrentItem(
-                user.homeItems[props.currentRoom].roomContainers[
-                  props.currentContainer
-                ].containerItems.length
+                props.currentContainerObj.containerItems.length
               );
             }
           }
@@ -118,25 +86,15 @@ const NewItemModal = (props) => {
       let oldName = "";
       let oldQuantity = 0;
       if (props.currentModalFor === "room") {
-        oldName = user.homeItems[props.currentRoom].roomName;
+        oldName = props.currentRoomObj.roomName;
       } else if (props.currentModalFor === "container") {
-        oldName =
-          user.homeItems[props.currentRoom].roomContainers[
-            props.currentContainer
-          ].containerName;
+        oldName = props.currentContainerObj.containerName;
       } else if (props.currentModalFor === "item") {
-        oldName =
-          user.homeItems[props.currentRoom].roomContainers[
-            props.currentContainer
-          ].containerItems[props.currentItem].itemName;
-        oldQuantity =
-          user.homeItems[props.currentRoom].roomContainers[
-            props.currentContainer
-          ].containerItems[props.currentItem].itemQuantity;
+        oldName = props.currentItemObj.itemName;
+        oldQuantity = props.currentItemObj.itemQuantity;
         quantityRef.current.value = oldQuantity;
         setNewQuantity(oldQuantity);
       }
-
       nameRef.current.value = oldName;
       setNewName(oldName);
     }
@@ -167,7 +125,7 @@ const NewItemModal = (props) => {
             <label htmlFor="name">{currentModalFor} name</label>
             <input
               onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={add}
+              onKeyPress={submit}
               id="name"
               type="text"
               autoComplete="off"
@@ -189,7 +147,7 @@ const NewItemModal = (props) => {
             </div>
           )}
         </div>
-        <button onClick={add} className="submit">
+        <button onClick={submit} className="submit">
           {currentModalType === "New" ? "Add" : "Edit"} {currentModalFor}
         </button>
         <button onClick={close} className="close">

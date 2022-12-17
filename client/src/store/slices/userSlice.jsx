@@ -7,6 +7,18 @@ const initialState = {
   userData: {
     signedIn: false,
   },
+  images: [
+    "male1",
+    "male2",
+    "male3",
+    "male4",
+    "male5",
+    "female1",
+    "female2",
+    "female3",
+    "female4",
+    "female5",
+  ],
 };
 
 export const fetchUserData = createAsyncThunk(
@@ -28,7 +40,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.accountActive = false
+      state.accountActive = false;
       state.userData = {};
     },
     activateAccount: (state) => {

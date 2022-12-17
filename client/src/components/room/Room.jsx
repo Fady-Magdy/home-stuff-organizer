@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
+import "./room.scss";
+// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../store/slices/userSlice";
-import "./room.scss";
-
+// API
 import axios from "axios";
 import Api from "../../api-link";
-
 // Font Awesome
 import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
 import * as FA from "@fortawesome/free-solid-svg-icons";
@@ -13,33 +13,34 @@ import * as FA from "@fortawesome/free-solid-svg-icons";
 const Room = (props) => {
   // States
   const user = useSelector((state) => state.user.userData);
-  const userStatus = useSelector((state) => state.user.status);
   const dispatch = useDispatch();
   const [activeRoom, setActiveRoom] = useState(false);
   const itemsCountRef = useRef(0);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
-  const changeCurrentRoom = () => {
-    props.setCurrentRoom(props.index);
-    props.setCurrentContainer(0);
-  };
   // ----------------------------------------------------------------------
   //  Use Effects
-  useEffect(() => {
-    if (props.currentRoom === props.index) {
-      props.setCantAddItem(
-        user.homeItems[props.currentRoom].roomContainers.length < 1
-      );
-    }
-    setActiveRoom(props.currentRoom === props.index);
-
-    // get count of total items inside this room to show in room card
-    itemsCountRef.current = 0;
-    props.room.roomContainers.forEach((container) => {
-      itemsCountRef.current += container.containerItems.length;
-    });
-  }, [props.currentRoom, props.currentItem, props, user.homeItems]);
+  useEffect(
+    () => {
+      if (props.currentRoom === props.index) {
+        props.setCantAddItem(
+          user.homeItems[props.currentRoom].roomContainers.length < 1
+        );
+      }
+      setActiveRoom(props.currentRoom === props.index);
+      if (props.currentRoomObj === null) {
+        props.setCurrentRoomObj(user.homeItems[props.currentRoom]);
+      }
+      // get count of total items inside this room to show in room card
+      itemsCountRef.current = 0;
+      props.room.roomContainers.forEach((container) => {
+        itemsCountRef.current += container.containerItems.length;
+      });
+    },
+    [props.currentRoom, props.currentItem, props, user.homeItems],
+    props.currentRoomObj
+  );
   // ----------------------------------------------------------------------
   //  Functions
   function deleteRoom() {
@@ -52,6 +53,7 @@ const Room = (props) => {
         .then((result) => {
           dispatch(fetchUserData());
         });
+      props.setCurrentRoom((prev) => prev - 1);
       setLoadingMessage("Deleting...");
       setDeleting(true);
     }
@@ -60,6 +62,10 @@ const Room = (props) => {
       setConfirmDelete(false);
     }, 1500);
   }
+  const changeCurrentRoom = () => {
+    props.setCurrentRoom(props.index);
+    props.setCurrentContainer(0);
+  };
   // ----------------------------------------------------------------------
   // JSX
   if (deleting) {
