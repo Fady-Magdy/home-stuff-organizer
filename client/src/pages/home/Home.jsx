@@ -56,6 +56,7 @@ const Home = () => {
       </section>
       {user.signedIn && <h1>Welcome {user.firstName}</h1>}
       <h1>Home</h1>
+      <h3 className="not-complete">This project is not complete</h3>
       <Footer />
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./header.scss";
 
@@ -16,6 +16,7 @@ const Header = () => {
   function logout() {
     localStorage.removeItem("hso-userId");
     window.location.reload();
+    Navigate("/");
   }
   // ---------------------------------------------------
   // JSX
