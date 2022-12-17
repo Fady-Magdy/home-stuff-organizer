@@ -1,6 +1,6 @@
 ## Home Stuff Organizer (not complete)
 
-Visit: https://hso-server-fady-magdy.vercel.app
+Visit: https://hso-fady-magdy.vercel.app
 
 ---
 
