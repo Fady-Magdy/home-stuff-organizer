@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { fetchUserData, activateAccount } from "./store/slices/userSlice";
+import { fetchUserData, activateAccount, userSlice } from "./store/slices/userSlice";
 import "./styles/app.scss";
 
 // Pages
@@ -33,10 +33,10 @@ function App() {
             <Route index path="/items" element={<Items />} />
           </Route>
 
-          <Route path="profile">
+          { userSlice.signedIn && <Route path="profile">
             <Route index path="/profile" element={<div>Profile</div>} />
             <Route index path="/profile/update-image" element={<UserImage />} />
-          </Route>
+          </Route>}
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="*" element={<NotFound404 />} />

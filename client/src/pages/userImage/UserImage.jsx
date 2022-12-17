@@ -48,7 +48,7 @@ const UserImage = () => {
               <div onClick={changeImage} key={index} className="image">
                 <img
                   data-value={image}
-                  src={require(`../../images/${image}.png`)}
+                  src={require(`../../images/profile-image/${image}.png`)}
                   alt=""
                 />
                 ;

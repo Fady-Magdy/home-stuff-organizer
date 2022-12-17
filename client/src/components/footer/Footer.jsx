@@ -7,7 +7,7 @@ const Footer = () => {
     <div className="footer">
       <div className="left">
         <h1>Copyright © 2022, Fady Magdy</h1>
-        <p>All right reserved</p>
+        <p>All rights reserved</p>
       </div>
       <div className="right"></div>
     </div>

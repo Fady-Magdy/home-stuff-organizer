@@ -75,7 +75,10 @@ const Item = (props) => {
             <FaIcon icon={FA.faTrash} />
           </button>
           <button
-            onClick={() => props.showNewModal("item", "edit")}
+            onClick={() => {
+              changeCurrentItem();
+              props.showNewModal("item", "edit");
+            }}
             className="edit-btn"
           >
             <FaIcon icon={FA.faEdit} />
