@@ -124,3 +124,12 @@
     }
   }
 }
+@media (max-width: 850px) {
+  .register-page,
+  .login-page {
+    .register-container,
+    .login-container {
+      width: 80%;
+    }
+  }
+}

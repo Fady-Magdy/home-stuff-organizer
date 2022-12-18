@@ -26,3 +26,23 @@
     }
   }
 }
+@media (max-width: 850px) {
+  .footer {
+    padding: 15px 0;
+    flex-direction: column;
+    .left,
+    .right {
+      width: 100%;
+      height: 50%;
+    }
+    .left {
+      flex-direction: column;
+      h1 {
+        font-size: 16px;
+      }
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+}

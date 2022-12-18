@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { fetchUserData, activateAccount, userSlice } from "./store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData, activateAccount } from "./store/slices/userSlice";
 import "./styles/app.scss";
 
 // Pages
@@ -16,6 +16,7 @@ import Header from "./components/header/Header";
 import UserImage from "./pages/userImage/UserImage";
 
 function App() {
+  const user = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   useEffect(() => {
     if (localStorage.getItem("hso-userId")) {
@@ -33,10 +34,16 @@ function App() {
             <Route index path="/items" element={<Items />} />
           </Route>
 
-          { userSlice.signedIn && <Route path="profile">
-            <Route index path="/profile" element={<div>Profile</div>} />
-            <Route index path="/profile/update-image" element={<UserImage />} />
-          </Route>}
+          {user.signedIn && (
+            <Route path="profile">
+              <Route index path="/profile" element={<div>Profile</div>} />
+              <Route
+                index
+                path="/profile/update-image"
+                element={<UserImage />}
+              />
+            </Route>
+          )}
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="*" element={<NotFound404 />} />

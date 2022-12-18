@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./header.scss";
@@ -6,9 +6,6 @@ import "./header.scss";
 //  Font Awesome
 import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
 import * as FA from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
 // ------------------------------------------------------
 const Header = () => {
   // States
@@ -63,7 +60,12 @@ const Header = () => {
   return (
     <header className="header">
       <div className="left">
-        <Link to="/">Home Stuff Organizer</Link>
+        <Link className="title desktop" to="/">
+          Home Stuff Organizer
+        </Link>
+        <Link className="title mobile" to="/">
+          HSO
+        </Link>
       </div>
       {accountActive && (
         <div className="center">

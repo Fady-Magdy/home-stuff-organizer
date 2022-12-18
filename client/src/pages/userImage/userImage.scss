@@ -62,3 +62,22 @@
     }
   }
 }
+@media (max-width: 850px) {
+  .user-image-page {
+    .images-container {
+      background-color: transparent;
+      .images {
+        gap: 10px;
+        .image {
+          width: 60px;
+        }
+      }
+      .buttons {
+        flex-direction: column;
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
