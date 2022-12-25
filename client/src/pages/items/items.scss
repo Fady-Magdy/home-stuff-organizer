@@ -91,6 +91,12 @@
   .items {
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
   }
+  .item-details {
+    width: 400px;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
+  }
 }
 @media (max-width: 850px) {
   .items-page {

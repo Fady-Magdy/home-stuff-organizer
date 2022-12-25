@@ -5,7 +5,6 @@ import { fetchUserData, activateAccount } from "./store/slices/userSlice";
 import "./styles/app.scss";
 
 // Pages
-import Home from "./pages/home/Home";
 import Items from "./pages/items/Items";
 import Register from "./pages/register/Register";
 import Login from "./pages/login/Login";
@@ -29,18 +28,14 @@ function App() {
       <BrowserRouter basename="/">
         <Header />
         <Routes>
-          <Route index path="/" element={<Home />} />
-          <Route path="items">
-            <Route index path="/items" element={<Items />} />
-          </Route>
-
+          <Route index path="/" element={<Items />} />
           {user.signedIn && (
             <Route path="profile">
               <Route index path="/profile" element={<div>Profile</div>} />
               <Route
-                index
                 path="/profile/update-image"
                 element={<UserImage />}
+                index
               />
             </Route>
           )}

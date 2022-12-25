@@ -65,7 +65,7 @@ const Item = (props) => {
         {props.item.itemName}
       </h4>
       <FaIcon icon={FA.faCircleCheck} />
-      <span>Quantity: {props.item.itemQuantity}</span>
+      <span>Quantity: {props.item.itemQuantity || 1}</span>
       <div className="bottom">
         <div className="buttons">
           <button

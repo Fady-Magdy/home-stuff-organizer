@@ -12,10 +12,13 @@ import Room from "../../components/room/Room";
 import Container from "../../components/container/Container";
 import Item from "../../components/item/Item";
 import NewItemModal from "../../components/newItemModal/NewItemModal";
+import Loading from "../../components/loading/Loading";
 // -------------------------------------------------------------------
 const Items = () => {
   // States
   const user = useSelector((state) => state.user.userData);
+  const userStatus = useSelector((state) => state.user.status);
+  const accountActive = useSelector((state) => state.user.accountActive);
   const dispatch = useDispatch();
   //  index of current(room, container, item)
   const [currentRoom, setCurrentRoom] = useState(0);
@@ -36,12 +39,15 @@ const Items = () => {
   const [currentModalType, setCurrentModalType] = useState("");
 
   // used to blocking add buttons
+  const [cantAddRoom, setCantAddRoom] = useState(true);
   const [cantAddContainer, setCantAddContainer] = useState(true);
   const [cantAddItem, setCantAddItem] = useState(true);
 
   const [currentRoomObj, setCurrentRoomObj] = useState(null);
   const [currentContainerObj, setCurrentContainerObj] = useState(null);
   const [currentItemObj, setCurrentItemObj] = useState(null);
+
+  const [currentThingToShow, setCurrentThingToShow] = useState("item");
   let allProps = {
     user,
     currentRoom,
@@ -77,7 +83,6 @@ const Items = () => {
     setCurrentContainerObj,
     currentItemObj,
     setCurrentItemObj,
-    refreshData,
   };
   // ---------------------------------------------------------------
   // functions
@@ -86,7 +91,16 @@ const Items = () => {
     setCurrentModalFor(forWhat);
     setShowModal(true);
   }
-  function refreshData() {
+
+  // ---------------------------------------------------------------
+  // Use Effects
+  useEffect(() => {
+    if (!showModal) {
+      dispatch(fetchUserData());
+    }
+  }, [dispatch, showModal]);
+
+  useEffect(() => {
     if (user.signedIn) {
       setCurrentRoomObj(
         user.homeItems[currentRoom] ? user.homeItems[currentRoom] : null
@@ -117,6 +131,7 @@ const Items = () => {
           setTotalItems((prev) => prev + container.containerItems.length);
         });
       });
+      setCantAddRoom(!userStatus === "success");
       // set add container button true or false
       setCantAddContainer(totalRooms < 1);
       // set add item button true or false
@@ -133,17 +148,6 @@ const Items = () => {
         setCurrentItemsCount(0);
       }
     }
-  }
-  // ---------------------------------------------------------------
-  // Use Effects
-  useEffect(() => {
-    if (!showModal) {
-      dispatch(fetchUserData());
-    }
-  }, [dispatch, showModal]);
-
-  useEffect(() => {
-    refreshData();
   }, [
     currentContainersCount,
     currentRoom,
@@ -157,6 +161,7 @@ const Items = () => {
     totalItems,
     user.homeItems,
     user.signedIn,
+    userStatus,
   ]);
   // ---------------------------------------------------------------
   // JSX
@@ -168,26 +173,39 @@ const Items = () => {
           <FaIcon icon={FA.faDoorClosed} />
           Rooms
         </h1>
-        {user.signedIn && (
-          <div className="section-tools">
-            <p>Total: {user.homeItems.length}</p>
-            <button onClick={() => showNewModal("room", "new")}>
-              <FaIcon icon={FA.faPlus} />
-            </button>
-          </div>
-        )}
+        <div className="section-tools">
+          <p>Total: {userStatus === "success" ? user.homeItems.length : "0"}</p>
+          <button
+            onClick={() => showNewModal("room", "new")}
+            disabled={cantAddRoom}
+          >
+            <FaIcon icon={FA.faPlus} />
+          </button>
+        </div>
         <hr />
         <div className="rooms-list">
-          {totalRooms < 1 && (
-            <p className="empty-section-message">You have no rooms</p>
+          {userStatus === "success" && totalRooms < 1 && (
+            <p className="empty-section-message">Create your first room</p>
           )}
           {/* Rooms list */}
-          {user.signedIn &&
-            user.homeItems.map((room, index) => {
-              return (
-                <Room key={room._id} room={room} index={index} {...allProps} />
-              );
-            })}
+          {accountActive ? (
+            userStatus === "success" ? (
+              user.homeItems.map((room, index) => {
+                return (
+                  <Room
+                    key={room._id}
+                    room={room}
+                    index={index}
+                    {...allProps}
+                  />
+                );
+              })
+            ) : (
+              <Loading />
+            )
+          ) : (
+            <p className="empty-section-message">Log In to Begin</p>
+          )}
         </div>
       </div>
       {/* Containers Column */}
@@ -196,38 +214,43 @@ const Items = () => {
           <FaIcon icon={FA.faBoxArchive} />
           Containers
         </h1>
-        {user.signedIn && (
-          <div className="section-tools">
-            <p>Total: {totalContainers}</p>
-            <button
-              onClick={() => showNewModal("container", "new")}
-              disabled={cantAddContainer}
-            >
-              <FaIcon icon={FA.faPlus} />
-            </button>
-          </div>
-        )}
+        <div className="section-tools">
+          <p>Total: {userStatus === "success" ? totalContainers : "0"}</p>
+          <button
+            onClick={() => showNewModal("container", "new")}
+            disabled={cantAddContainer}
+          >
+            <FaIcon icon={FA.faPlus} />
+          </button>
+        </div>
         <hr />
         <div className="containers-list">
-          {currentContainersCount < 1 && (
+          {userStatus === "success" && currentContainersCount < 1 && (
             <p className="empty-section-message">No Containers</p>
           )}
           {/* Containers list */}
-          {user.signedIn &&
-            user.homeItems.map((room, index) => {
-              if (index === currentRoom) {
-                return room.roomContainers.map((container, index) => {
-                  return (
-                    <Container
-                      key={container._id}
-                      index={index}
-                      container={container}
-                      {...allProps}
-                    />
-                  );
-                });
-              }
-            })}
+          {accountActive ? (
+            userStatus === "success" ? (
+              user.homeItems.map((room, index) => {
+                if (index === currentRoom) {
+                  return room.roomContainers.map((container, index) => {
+                    return (
+                      <Container
+                        key={container._id}
+                        index={index}
+                        container={container}
+                        {...allProps}
+                      />
+                    );
+                  });
+                }
+              })
+            ) : (
+              <Loading />
+            )
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* Items Column */}
@@ -236,44 +259,56 @@ const Items = () => {
           <FaIcon icon={FA.faHammer} />
           Items
         </h1>
-        {user.signedIn && (
-          <div className="section-tools">
-            <p>Total: {totalItems}</p>
-            <button
-              onClick={() => showNewModal("item", "new")}
-              disabled={cantAddItem}
-            >
-              <FaIcon icon={FA.faPlus} />
-            </button>
-          </div>
-        )}
+        <div className="section-tools">
+          <p>Total: {userStatus === "success" ? totalItems : "0"}</p>
+          <button
+            onClick={() => showNewModal("item", "new")}
+            disabled={cantAddItem}
+          >
+            <FaIcon icon={FA.faPlus} />
+          </button>
+        </div>
         <hr />
         <div className="items-list">
-          {currentItemsCount < 1 && (
+          {userStatus === "success" && currentItemsCount < 1 && (
             <p className="empty-section-message">No Items</p>
           )}
           {/* Items list */}
-          {user.signedIn &&
-            user.homeItems.map((room, index) => {
-              if (index === currentRoom) {
-                return room.roomContainers.map((container, index) => {
-                  if (index === currentContainer) {
-                    return container.containerItems.map((item, index) => {
-                      return (
-                        <Item
-                          key={item._id}
-                          item={item}
-                          index={index}
-                          {...allProps}
-                        />
-                      );
-                    });
-                  }
-                });
-              }
-            })}
+          {accountActive ? (
+            userStatus === "success" ? (
+              user.homeItems.map((room, index) => {
+                if (index === currentRoom) {
+                  return room.roomContainers.map((container, index) => {
+                    if (index === currentContainer) {
+                      return container.containerItems.map((item, index) => {
+                        return (
+                          <Item
+                            key={item._id}
+                            item={item}
+                            index={index}
+                            {...allProps}
+                          />
+                        );
+                      });
+                    }
+                  });
+                }
+              })
+            ) : (
+              <Loading />
+            )
+          ) : (
+            ""
+          )}
         </div>
       </div>
+      {accountActive && userStatus === "success" && currentItemObj && (
+        <div className="item-details">
+          <h3>{currentItemObj.itemName}</h3>
+          <p>Quantity: {currentItemObj.itemQuantity || 1}</p>
+          <button onClick={() => showNewModal("item", "edit")}>Edit</button>
+        </div>
+      )}
       {/* Modal Component */}
       {showModal && <NewItemModal {...allProps} />}
     </div>

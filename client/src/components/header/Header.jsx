@@ -6,10 +6,12 @@ import "./header.scss";
 //  Font Awesome
 import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
 import * as FA from "@fortawesome/free-solid-svg-icons";
+import Loading from "../loading/Loading";
 // ------------------------------------------------------
 const Header = () => {
   // States
   const user = useSelector((state) => state.user.userData);
+  const userStatus = useSelector((state) => state.user.status);
   const accountActive = useSelector((state) => state.user.accountActive);
   const searchValueRef = useRef("");
   const [foundItems, setFoundItems] = useState([]);
@@ -105,12 +107,6 @@ const Header = () => {
       )}
       <div className="right">
         <ul>
-          <li>
-            <Link to="/items">
-              <FaIcon icon={FA.faTabletScreenButton} />
-              <span>Your Items</span>
-            </Link>
-          </li>
           {!accountActive && (
             <>
               <li>
@@ -138,6 +134,7 @@ const Header = () => {
         {accountActive && (
           <Link to="/profile/update-image">
             <div className="user-image">
+              {userStatus === "pending" && <Loading />}
               <img
                 src={require(`../../images/profile-image/${
                   user.profileImage || "default"
