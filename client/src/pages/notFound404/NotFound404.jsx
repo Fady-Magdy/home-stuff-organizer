@@ -4,11 +4,15 @@ import "./notFound404.scss";
 const NotFound404 = () => {
   return (
     <div className="not-found-page">
-      <h1>404</h1>
-      <h3>Page Not Found</h3>
-      <Link to="/">
-        <button>Go Back Home</button>
-      </Link>
+      <div className="not-found-container">
+        <div className="texts">
+          <h1>404</h1>
+          <p>The page you are looking for is not found</p>
+        </div>
+        <Link to="/">
+          <button className="back-home">Back to Home</button>
+        </Link>
+      </div>
     </div>
   );
 };

@@ -75,7 +75,7 @@ const Container = (props) => {
             <FaIcon icon={FA.faTrash} />
           </button>
           <button
-            onClick={() => props.showNewModal("container", "edit")}
+            onClick={() => props.showNewModal("container", "edit" , props.index)}
             className="edit-btn"
           >
             <FaIcon icon={FA.faEdit} />

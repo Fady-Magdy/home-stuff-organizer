@@ -79,26 +79,8 @@
       }
     }
   }
-  &::before {
-    content: "";
-    position: absolute;
-    border-radius: 5px;
-    right: 0;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 0;
-    height: 104%;
-    background-color: $purple-color;
-    transition: 0.2s;
-  }
   &.active {
     background-color: $purple-color;
-    &::before {
-      content: "";
-      border-left: none;
-      right: -15px;
-      width: 7px;
-    }
     svg {
       path {
         color: #fff;

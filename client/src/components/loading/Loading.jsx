@@ -20,7 +20,7 @@ const Loading = () => {
   }
   let currentColor = 0;
   function animatePieces() {
-    let colors = ["green", "purple", "blue", "red", "orange", "cyan"];
+    let colors = ["green", "purple", "blue", "red", "orange"];
 
     let allPieces = document.querySelectorAll(".piece-inside");
     let timeOut = 0;

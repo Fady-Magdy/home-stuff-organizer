@@ -77,7 +77,7 @@ const Item = (props) => {
           <button
             onClick={() => {
               changeCurrentItem();
-              props.showNewModal("item", "edit");
+              props.showNewModal("item", "edit", props.index);
             }}
             className="edit-btn"
           >

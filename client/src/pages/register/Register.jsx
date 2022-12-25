@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "./register.scss";
 
 // API
@@ -10,12 +10,13 @@ import Api from "../../api-link";
 //  Font Awesome
 import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
 import * as FA from "@fortawesome/free-solid-svg-icons";
+import { activateAccount } from "../../store/slices/userSlice";
 // ------------------------------------------------------------
 const Register = () => {
   // States
   const accountActive = useSelector((state) => state.user.accountActive);
-  const user = useSelector((state) => state.user.userData);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
   const emailRef = useRef(null);
@@ -151,7 +152,17 @@ const Register = () => {
     };
 
     axios.post(`${Api}/api/users/new`, dataToSend).then((result) => {
-      if (result.data === "success") navigate("/login");
+      console.log(result.data);
+
+      if (result.data.status === "success") {
+        localStorage.setItem(
+          "hso-userId",
+          JSON.stringify(result.data.user._id)
+        );
+        dispatch(activateAccount());
+        navigate("/profile/update-image");
+        window.location.reload();
+      }
     });
   }
 
@@ -172,7 +183,9 @@ const Register = () => {
         {/* --------------------------------------------------- */}
         {/* First Name */}
         <div className="input-group">
-          <label htmlFor="firstName">First Name *</label>
+          <label htmlFor="firstName">
+            First Name <span>*</span>
+          </label>
           <input
             id="firstName"
             type="text"
@@ -186,7 +199,9 @@ const Register = () => {
         {/* --------------------------------------------------- */}
         {/* Last Name */}
         <div className="input-group">
-          <label htmlFor="lastName">Last Name *</label>
+          <label htmlFor="lastName">
+            Last Name <span>*</span>
+          </label>
           <input
             id="lastName"
             type="text"
@@ -200,7 +215,9 @@ const Register = () => {
         {/* --------------------------------------------------- */}
         {/* Email */}
         <div className="input-group">
-          <label htmlFor="email">Email *</label>
+          <label htmlFor="email">
+            Email <span>*</span>
+          </label>
           <input
             id="email"
             type="email"
@@ -214,7 +231,9 @@ const Register = () => {
         {/* --------------------------------------------------- */}
         {/* Password */}
         <div className="input-group">
-          <label htmlFor="password">Password *</label>
+          <label htmlFor="password">
+            Password <span>*</span>
+          </label>
           <input
             id="password"
             type="password"
@@ -228,7 +247,9 @@ const Register = () => {
         {/* --------------------------------------------------- */}
         {/* Confirm Password */}
         <div className="input-group">
-          <label htmlFor="confirmPassword">Confirm Password *</label>
+          <label htmlFor="confirmPassword">
+            Confirm Password <span>*</span>
+          </label>
           <input
             id="confirmPassword"
             type="password"
@@ -241,7 +262,7 @@ const Register = () => {
         </div>
         {/* --------------------------------------------------- */}
         <button className="register-btn" onClick={createAccount}>
-          <FaIcon icon={FA.faSquarePlus} />
+          <FaIcon icon={FA.faUserPlus} />
           <span>Create Account</span>
         </button>
         <p className="demo-user-text">

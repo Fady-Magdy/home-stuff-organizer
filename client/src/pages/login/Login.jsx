@@ -67,21 +67,21 @@ const Login = () => {
         <h2 className="login-title">Login</h2>
         <hr />
         <div className="input-group">
-          <label htmlFor="email">Email *</label>
+          <label htmlFor="email">Email</label>
           <input
             id="email"
             type="email"
-            placeholder="Email"
+            placeholder="Enter Your Email"
             ref={emailRef}
             onChange={changeValues}
           />
         </div>
         <div className="input-group">
-          <label htmlFor="password">Password *</label>
+          <label htmlFor="password">Password</label>
           <input
             id="password"
             type="password"
-            placeholder="Password"
+            placeholder="Enter Your Password"
             ref={passwordRef}
             onChange={changeValues}
           />

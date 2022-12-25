@@ -96,6 +96,27 @@
     height: 100vh;
     background-color: #fff;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.281);
+    padding: 20px;
+    border-left: 1px solid rgba(0, 0, 0, 0.178);
+    .item-name {
+      font-weight: 400;
+    }
+    .item-quantity {
+      opacity: 0.7;
+      padding: 5px 0;
+    }
+    .edit {
+      padding: 7px 15px;
+      border-radius: 5px;
+      border: none;
+      background-color: $purple-color;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+        filter: brightness(1.2);
+      }
+    }
   }
 }
 @media (max-width: 850px) {
@@ -133,11 +154,11 @@
           width: 70px;
           font-size: 15px;
           line-height: 10px;
-          &::before {
-            display: none;
-          }
         }
       }
+    }
+    .item-details {
+      width: 100%;
     }
   }
 }

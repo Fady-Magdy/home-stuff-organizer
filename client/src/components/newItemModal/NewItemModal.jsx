@@ -86,12 +86,16 @@ const NewItemModal = (props) => {
       let oldName = "";
       let oldQuantity = 0;
       if (props.currentModalFor === "room") {
-        oldName = props.currentRoomObj.roomName;
+        oldName = user.homeItems[props.currentIndexForModal].roomName;
       } else if (props.currentModalFor === "container") {
-        oldName = props.currentContainerObj.containerName;
+        oldName =
+          props.currentRoomObj.roomContainers[props.currentIndexForModal]
+            .containerName;
       } else if (props.currentModalFor === "item") {
-        oldName = props.currentItemObj.itemName;
-        oldQuantity = props.currentItemObj.itemQuantity;
+        let item =
+          props.currentContainerObj.containerItems[props.currentIndexForModal];
+        oldName = item.itemName;
+        oldQuantity = item.itemQuantity;
         quantityRef.current.value = oldQuantity;
         setNewQuantity(oldQuantity);
       }

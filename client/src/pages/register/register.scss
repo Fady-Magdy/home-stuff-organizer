@@ -36,6 +36,10 @@
         font-size: 15px;
         margin-bottom: 5px;
         margin-left: 3px;
+        width: fit-content;
+        span {
+          color: red;
+        }
       }
       input {
         padding-left: 10px;

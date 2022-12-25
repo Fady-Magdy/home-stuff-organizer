@@ -97,7 +97,9 @@ const Room = (props) => {
             <FaIcon icon={FA.faTrash} />
           </button>
           <button
-            onClick={() => props.showNewModal("room", "edit")}
+            onClick={() => {
+              props.showNewModal("room", "edit", props.index);
+            }}
             className="edit-btn"
           >
             <FaIcon icon={FA.faEdit} />

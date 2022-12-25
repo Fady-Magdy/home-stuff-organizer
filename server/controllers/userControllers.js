@@ -4,7 +4,7 @@ exports.addNewUser = (req, res) => {
   newUser = req.body;
   User.create(newUser, (err, result) => {
     if (err) return res.send(err);
-    res.send("success");
+    res.send({ user: result, status: "success" });
   });
 };
 

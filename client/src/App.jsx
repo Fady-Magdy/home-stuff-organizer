@@ -15,7 +15,7 @@ import Header from "./components/header/Header";
 import UserImage from "./pages/userImage/UserImage";
 
 function App() {
-  const user = useSelector((state) => state.user.userData);
+  const accountActive = useSelector((state) => state.user.accountActive);
   const dispatch = useDispatch();
   useEffect(() => {
     if (localStorage.getItem("hso-userId")) {
@@ -29,7 +29,7 @@ function App() {
         <Header />
         <Routes>
           <Route index path="/" element={<Items />} />
-          {user.signedIn && (
+          {accountActive && (
             <Route path="profile">
               <Route index path="/profile" element={<div>Profile</div>} />
               <Route

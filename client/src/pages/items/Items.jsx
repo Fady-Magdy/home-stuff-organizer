@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData } from "../../store/slices/userSlice";
+import { useSelector } from "react-redux";
 import "./items.scss";
 
 // Font Awesome
 import { FontAwesomeIcon as FaIcon } from "@fortawesome/react-fontawesome";
 import * as FA from "@fortawesome/free-solid-svg-icons";
-
 // Components
 import Room from "../../components/room/Room";
 import Container from "../../components/container/Container";
@@ -19,35 +17,31 @@ const Items = () => {
   const user = useSelector((state) => state.user.userData);
   const userStatus = useSelector((state) => state.user.status);
   const accountActive = useSelector((state) => state.user.accountActive);
-  const dispatch = useDispatch();
   //  index of current(room, container, item)
   const [currentRoom, setCurrentRoom] = useState(0);
   const [currentContainer, setCurrentContainer] = useState(0);
   const [currentItem, setCurrentItem] = useState(0);
-
   // check how many items showing up
   const [currentContainersCount, setCurrentContainersCount] = useState(0);
   const [currentItemsCount, setCurrentItemsCount] = useState(0);
-
   // getting total items of all user data
   const [totalRooms, setTotalRooms] = useState(0);
   const [totalContainers, setTotalContainers] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-
+  // States for modal
   const [showModal, setShowModal] = useState(false);
   const [currentModalFor, setCurrentModalFor] = useState("");
   const [currentModalType, setCurrentModalType] = useState("");
-
   // used to blocking add buttons
   const [cantAddRoom, setCantAddRoom] = useState(true);
   const [cantAddContainer, setCantAddContainer] = useState(true);
   const [cantAddItem, setCantAddItem] = useState(true);
-
+  // to get current object itself
   const [currentRoomObj, setCurrentRoomObj] = useState(null);
   const [currentContainerObj, setCurrentContainerObj] = useState(null);
   const [currentItemObj, setCurrentItemObj] = useState(null);
-
-  const [currentThingToShow, setCurrentThingToShow] = useState("item");
+  // to get which (room,cont,item) should be edited
+  const [currentIndexForModal, setCurrentIndexForModal] = useState(0);
   let allProps = {
     user,
     currentRoom,
@@ -83,10 +77,12 @@ const Items = () => {
     setCurrentContainerObj,
     currentItemObj,
     setCurrentItemObj,
+    currentIndexForModal,
   };
   // ---------------------------------------------------------------
   // functions
-  function showNewModal(forWhat, modalType) {
+  function showNewModal(forWhat, modalType, index) {
+    setCurrentIndexForModal(index);
     setCurrentModalType(modalType);
     setCurrentModalFor(forWhat);
     setShowModal(true);
@@ -94,12 +90,6 @@ const Items = () => {
 
   // ---------------------------------------------------------------
   // Use Effects
-  useEffect(() => {
-    if (!showModal) {
-      dispatch(fetchUserData());
-    }
-  }, [dispatch, showModal]);
-
   useEffect(() => {
     if (user.signedIn) {
       setCurrentRoomObj(
@@ -302,11 +292,22 @@ const Items = () => {
           )}
         </div>
       </div>
-      {accountActive && userStatus === "success" && currentItemObj && (
+      {accountActive && (
         <div className="item-details">
-          <h3>{currentItemObj.itemName}</h3>
-          <p>Quantity: {currentItemObj.itemQuantity || 1}</p>
-          <button onClick={() => showNewModal("item", "edit")}>Edit</button>
+          {userStatus === "success" && currentItemObj && (
+            <>
+              <h3 className="item-name">{currentItemObj.itemName}</h3>
+              <p className="item-quantity">
+                Quantity: {currentItemObj.itemQuantity || 1}
+              </p>
+              <button
+                className="edit"
+                onClick={() => showNewModal("item", "edit", currentItem)}
+              >
+                Edit
+              </button>
+            </>
+          )}
         </div>
       )}
       {/* Modal Component */}
